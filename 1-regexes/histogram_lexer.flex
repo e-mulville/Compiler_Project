@@ -55,6 +55,39 @@ extern "C" int fileno(FILE *stream);
 
 [A-Za-z]+          { fprintf(stderr, "Word : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
 
+[+]		{ fprintf(stderr, "Operator : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[-]		{ fprintf(stderr, "Operator : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[/]		{ fprintf(stderr, "Operator : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[*]		{ fprintf(stderr, "Operator : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[=]		{ fprintf(stderr, "Operator : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[+=]		{ fprintf(stderr, "Operator : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[>]		{ fprintf(stderr, "Logic : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[>=]		{ fprintf(stderr, "Logic : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[<]		{ fprintf(stderr, "Logic : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[<=]		{ fprintf(stderr, "Logic : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[!=]		{ fprintf(stderr, "Logic : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[&&]		{ fprintf(stderr, "Logic : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[||]		{ fprintf(stderr, "Logic : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[(]		{ fprintf(stderr, "Symbol : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[)]		{ fprintf(stderr, "Symbol : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[{]		{ fprintf(stderr, "Symbol : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
+
+[}]		{ fprintf(stderr, "Symbol : %s\n", yytext); yylval.wordValue = new std::string(yytext); return Word; }
 
 \n              { fprintf(stderr, "Newline\n"); }
 
