@@ -1,0 +1,8 @@
+MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
+DefineInitialMilestones,             ,1,    ?,yes, Come up with initial milestones for getting started
+CollectTokens,,1,,yes,Collect all the C tokens and start thinking about how they work
+LookatParser,Parser lab,2,,,Learn how to parse
+Docode-genlab,,2,,,Use the code-gen lab to feel out ideas for the compiler
+DecideASTstyle,,2,,,Decide on our AST style to guide our efforts
+WriteSimpleProgram,Decided AST style,8,,,Write a simple program that works
+AddSupportForMoreFeatures,Got anything working,8,,,Add further tokens and cases
