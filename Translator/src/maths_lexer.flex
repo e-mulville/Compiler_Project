@@ -41,6 +41,13 @@ double		{ return T_DOUBLE; }
 short		{ return T_SHORT; }
 long		{ return T_LONG; }
 char		{ return T_CHAR; }
+float		{ return T_FLOAT; }
+signed		{ return T_SIGNED; }
+unsigned	{ return T_UNSIGNED; }
+static		{ return T_STATIC; }
+struct		{ return T_STRUCT; }
+void		{ return T_VOID; }
+register	{ return T_REGISTER; } //hints to put variable in regiser
 
 for		{ return T_FOR; }
 if		{ return T_IF; }
@@ -48,8 +55,29 @@ else		{ return T_ELSE; }
 while		{ return T_WHILE; }
 do		{ return T_DO; }
 
-goto
-return
+goto		{ return T_GOTO; }
+return		{ return T_RETURN; }
+
+switch		{ return T_SWITCH;} //kinda like if-else
+case		{ return T_CASE; } //used with switch
+default		{ return T_default; } //used with switch
+
+auto		{} //does nothing at all
+break		{ return T_BREAK; }//breaks out of loops
+continue	{ return T_CONTINUE; } //opposite of break
+
+const
+
+
+enum		{ return T_ENUM; } //some funky list thing
+extern		{ return T_EXTERN; }//funky variable declaring thing
+sizeof		{ return T_SIZEOF; }
+
+
+typedef		{ return T_REGISTER; }
+union		{ return T_REGISTER; }
+volatile	{ return T_REGISTER; }
+
 
 [(]             { return T_LBRACKET; }
 [)]             { return T_RBRACKET; }
@@ -57,11 +85,6 @@ return
 [}]		{ return T_RCURLBRACKET; }
 [\[]		{ return T_RSQRBRACKET; }
 []]		{ return T_RSQRLBRACKET; }
-
-log             { return T_LOG;   }
-exp             { return T_EXP; }
-sqrt            { return T_SQRT; }
-		
 	
 
 
