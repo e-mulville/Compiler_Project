@@ -1,5 +1,6 @@
 Date,Effort,Developers,Milestones
 29/01/18,2,,Lexer lab
-05/02/18,,EM,Collected tokens + (Parser lab)
-12/02/18,,,
-19/02/18,,EM,Lay out milestones
+05/02/18,,EM,"CollectToken, "
+12/02/18,,EM,
+19/02/18,3,EM,Lay out milestones
+26/02/18,4,EM,Started Parser and AST

@@ -1,8 +1,10 @@
 MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
-DefineInitialMilestones,             ,1,    ?,yes, Come up with initial milestones for getting started
-CollectTokens,,1,,yes,Collect all the C tokens and start thinking about how they work
-LookatParser,Parser lab,2,,,Learn how to parse
-Docode-genlab,,2,,,Use the code-gen lab to feel out ideas for the compiler
+LexerLab,,2,,d9d084dfe761c32044fffd1c57b609b2bbdad789,Do lexer lab
+DefineInitialMilestones,             ,1,,d9d084dfe761c32044fffd1c57b609b2bbdad789, Come up with initial milestones for getting started
+CollectTokens,LexerLab,1,,9f5d81f5517f721f12c5450f839cc48fc91be32a,Collect all the C tokens and start thinking about how they work
+ParserLab,LexerLab,3,,9f5d81f5517f721f12c5450f839cc48fc91be32a,Learn how to parse
+LookatParser,ParserLab,2,,this,Think about parsing C
+Docode-genlab,,2,,this,Use the code-gen lab to feel out ideas for the compiler
 DecideASTstyle,,2,,,Decide on our AST style to guide our efforts
 WriteSimpleProgram,Decided AST style,8,,,Write a simple program that works
 AddSupportForMoreFeatures,Got anything working,8,,,Add further tokens and cases
