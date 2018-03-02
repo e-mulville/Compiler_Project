@@ -1,0 +1,21 @@
+CPPFLAGS += -std=c++11 -W -Wall -g -Wno-unused-parameter
+CPPFLAGS += -I include
+
+all : bin/main
+
+c_parser.tab.cpp c_parser.tab.hpp : c_parser.y
+	bison -v -d c_parser.y -o c_parser.tab.cpp
+
+c_lexer.yy.cpp : c_lexer.flex c_parser.tab.hpp
+	flex -o c_lexer.yy.cpp  c_lexer.flex
+
+bin/main : c_parser.tab.o c_lexer.yy.o c_parser.tab.o
+	mkdir -p bin
+	g++ $(CPPFLAGS) -o bin/main $^
+
+
+clean :
+	rm src/*.o
+	rm bin/*
+	rm src/*.tab.cpp
+	rm src/*.yy.cpp
