@@ -1,4 +1,0 @@
-Seq [
-  Assign : x [ 10 ]
-  x
-]

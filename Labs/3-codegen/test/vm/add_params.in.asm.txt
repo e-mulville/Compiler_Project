@@ -1,4 +1,0 @@
-param X
-params Y
-add R X Y
-halt R
