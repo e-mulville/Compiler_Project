@@ -1,20 +1,20 @@
 %code requires{
-  #include "ast.hpp"
+	#include "ast.hpp"
 
-  #include <cassert>
+	#include <cassert>
 
- // extern const Expression *g_root; // A way of getting the AST out
+	extern const Statement *g_root; // A way of getting the AST out
 
-  int yylex(void);
-  void yyerror(const char *);
+	int yylex(void);
+	void yyerror(const char *);
 }
 
 // Represents the value associated with any kind of
 // AST node.
 %union{
- // const Expression *expr;
-  double number;
-  std::string *string;
+	const Statement *statement;
+	double number;
+	std::string *string;
 }
 
 %token T_ASSIGN 
@@ -23,7 +23,7 @@
 %token T_INT T_RETURN
 
 %token  T_NUMBER T_VARIABLE
-%type <expr> PROGRAM STATEMENT STATEMENT_LIST DECLARATION  ASSIGNMENT JUMP FUNC_DECLARATION VAR_DECLARATION ARGUMENT_LIST EXPR VALUE ARGUMENT
+%type <statement> PROGRAM STATEMENT STATEMENT_LIST DECLARATION  ASSIGNMENT JUMP FUNC_DECLARATION VAR_DECLARATION ARGUMENT_LIST EXPR VALUE ARGUMENT
 %type <number> T_NUMBER
 %type <string> T_VARIABLE
 
@@ -34,22 +34,22 @@
 
 
 
-ROOT : PROGRAM
+ROOT : PROGRAM { g_root = $1; }
 
 PROGRAM : %empty {;}
-	| PROGRAM STATEMENT
+	| PROGRAM STATEMENT { $$ = $2; }
 
-STATEMENT:DECLARATION
-	| ASSIGNMENT
-	| JUMP
+STATEMENT:DECLARATION { $$ = $1; }
+	| ASSIGNMENT { $$ = $1; }
+	| JUMP { $$ = $1; }
 
 STATEMENT_LIST : %empty {;}
 	| STATEMENT_LIST STATEMENT
 
-DECLARATION : FUNC_DECLARATION
-	| VAR_DECLARATION T_SEMICOLON
+DECLARATION : FUNC_DECLARATION { $$ = $1; }
+	| VAR_DECLARATION T_SEMICOLON { $$ = $1; }
 
-FUNC_DECLARATION : TYPE T_VARIABLE T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET {std::cout << "Function";}
+FUNC_DECLARATION : TYPE T_VARIABLE T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET { $$ = new FuncDeclaration($7, $4) ;}
 
 ARGUMENT_LIST : %empty {;}
 	| ARGUMENT
@@ -77,11 +77,11 @@ VALUE : T_NUMBER {std::cout << "Num" ;}
 
 %%
 
-//const Expression *g_root; // Definition of variable (to match declaration earlier)
+const Statement *g_root; // Definition of variable (to match declaration earlier)
 
-//const Expression *parseAST()
-/*{
+const Statement *parseAST()
+{
   g_root=0;
   yyparse();
   return g_root;
-}*/
+}

@@ -95,14 +95,14 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 1 "c_parser.y" /* yacc.c:355  */
 
-  #include "ast.hpp"
+	#include "ast.hpp"
 
-  #include <cassert>
+	#include <cassert>
 
- // extern const Expression *g_root; // A way of getting the AST out
+	extern const Statement *g_root; // A way of getting the AST out
 
-  int yylex(void);
-  void yyerror(const char *);
+	int yylex(void);
+	void yyerror(const char *);
 
 #line 108 "c_parser.tab.cpp" /* yacc.c:355  */
 
@@ -133,9 +133,9 @@ union YYSTYPE
 {
 #line 14 "c_parser.y" /* yacc.c:355  */
 
- // const Expression *expr;
-  double number;
-  std::string *string;
+	const Statement *statement;
+	double number;
+	std::string *string;
 
 #line 141 "c_parser.tab.cpp" /* yacc.c:355  */
 };
@@ -1248,80 +1248,122 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 3:
+        case 2:
+#line 37 "c_parser.y" /* yacc.c:1646  */
+    { g_root = (yyvsp[0].statement); }
+#line 1255 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
+  case 3:
 #line 39 "c_parser.y" /* yacc.c:1646  */
     {;}
-#line 1255 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1261 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
+  case 4:
+#line 40 "c_parser.y" /* yacc.c:1646  */
+    { (yyval.statement) = (yyvsp[0].statement); }
+#line 1267 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
+  case 5:
+#line 42 "c_parser.y" /* yacc.c:1646  */
+    { (yyval.statement) = (yyvsp[0].statement); }
+#line 1273 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
+  case 6:
+#line 43 "c_parser.y" /* yacc.c:1646  */
+    { (yyval.statement) = (yyvsp[0].statement); }
+#line 1279 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
+  case 7:
+#line 44 "c_parser.y" /* yacc.c:1646  */
+    { (yyval.statement) = (yyvsp[0].statement); }
+#line 1285 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 46 "c_parser.y" /* yacc.c:1646  */
     {;}
-#line 1261 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1291 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
+  case 10:
+#line 49 "c_parser.y" /* yacc.c:1646  */
+    { (yyval.statement) = (yyvsp[0].statement); }
+#line 1297 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
+  case 11:
+#line 50 "c_parser.y" /* yacc.c:1646  */
+    { (yyval.statement) = (yyvsp[-1].statement); }
+#line 1303 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 52 "c_parser.y" /* yacc.c:1646  */
-    {std::cout << "Function";}
-#line 1267 "c_parser.tab.cpp" /* yacc.c:1646  */
+    { (yyval.statement) = new FuncDeclaration((yyvsp[-1].statement), (yyvsp[-4].statement)) ;}
+#line 1309 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 54 "c_parser.y" /* yacc.c:1646  */
     {;}
-#line 1273 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1315 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 58 "c_parser.y" /* yacc.c:1646  */
     { ;}
-#line 1279 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1321 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 60 "c_parser.y" /* yacc.c:1646  */
     { std::cout << "Int";}
-#line 1285 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1327 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 63 "c_parser.y" /* yacc.c:1646  */
     { std::cout << "assignment";}
-#line 1291 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1333 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 65 "c_parser.y" /* yacc.c:1646  */
     { std::cout << "Var_Dec" ;}
-#line 1297 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1339 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 21:
 #line 67 "c_parser.y" /* yacc.c:1646  */
     {std::cout << "=" ;}
-#line 1303 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1345 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 71 "c_parser.y" /* yacc.c:1646  */
     { std::cout << "return";}
-#line 1309 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1351 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
 #line 75 "c_parser.y" /* yacc.c:1646  */
     {std::cout << "Num" ;}
-#line 1315 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1357 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 76 "c_parser.y" /* yacc.c:1646  */
     {std::cout << "Var";}
-#line 1321 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1363 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1325 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1367 "c_parser.tab.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1552,11 +1594,11 @@ yyreturn:
 #line 78 "c_parser.y" /* yacc.c:1906  */
 
 
-//const Expression *g_root; // Definition of variable (to match declaration earlier)
+const Statement *g_root; // Definition of variable (to match declaration earlier)
 
-//const Expression *parseAST()
-/*{
+const Statement *parseAST()
+{
   g_root=0;
   yyparse();
   return g_root;
-}*/
+}

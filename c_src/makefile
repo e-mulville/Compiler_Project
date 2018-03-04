@@ -10,6 +10,8 @@ c_parser.tab.cpp c_parser.tab.hpp : c_parser.y
 c_lexer.yy.cpp : c_lexer.flex c_parser.tab.hpp
 	flex -o c_lexer.yy.cpp  c_lexer.flex
 
+main.o : ast.hpp ast/*.hpp
+
 
 bin/main : main.o c_parser.tab.o c_lexer.yy.o c_parser.tab.o
 	mkdir -p bin

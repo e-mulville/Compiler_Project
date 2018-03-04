@@ -42,14 +42,14 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 1 "c_parser.y" /* yacc.c:1909  */
 
-  #include "ast.hpp"
+	#include "ast.hpp"
 
-  #include <cassert>
+	#include <cassert>
 
- // extern const Expression *g_root; // A way of getting the AST out
+	extern const Statement *g_root; // A way of getting the AST out
 
-  int yylex(void);
-  void yyerror(const char *);
+	int yylex(void);
+	void yyerror(const char *);
 
 #line 55 "c_parser.tab.hpp" /* yacc.c:1909  */
 
@@ -80,9 +80,9 @@ union YYSTYPE
 {
 #line 14 "c_parser.y" /* yacc.c:1909  */
 
- // const Expression *expr;
-  double number;
-  std::string *string;
+	const Statement *statement;
+	double number;
+	std::string *string;
 
 #line 88 "c_parser.tab.hpp" /* yacc.c:1909  */
 };
