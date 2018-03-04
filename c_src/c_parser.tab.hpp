@@ -46,7 +46,7 @@ extern int yydebug;
 
   #include <cassert>
 
-  extern const Expression *g_root; // A way of getting the AST out
+ // extern const Expression *g_root; // A way of getting the AST out
 
   int yylex(void);
   void yyerror(const char *);
@@ -67,8 +67,9 @@ extern int yydebug;
     T_COLON = 264,
     T_COMMA = 265,
     T_INT = 266,
-    T_NUMBER = 267,
-    T_VARIABLE = 268
+    T_RETURN = 267,
+    T_NUMBER = 268,
+    T_VARIABLE = 269
   };
 #endif
 
@@ -79,11 +80,11 @@ union YYSTYPE
 {
 #line 14 "c_parser.y" /* yacc.c:1909  */
 
-  const Expression *expr;
+ // const Expression *expr;
   double number;
   std::string *string;
 
-#line 87 "c_parser.tab.hpp" /* yacc.c:1909  */
+#line 88 "c_parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

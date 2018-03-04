@@ -2,11 +2,9 @@
 
 #include <iomanip>
 
+int yyparse();
 
-
-int main()
-{
-    const Expression *ast=parseAST();
-
-    return 0;
+int main(int argc, char **argv)
+{	
+	yyparse();
 }

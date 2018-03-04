@@ -491,7 +491,7 @@ char *yytext;
 #line 4 "c_lexer.flex"
 extern "C" int fileno(FILE *stream);
 
-#include "maths_parser.tab.hpp"
+#include "c_parser.tab.hpp"
 #line 496 "c_lexer.yy.cpp"
 
 #define INITIAL 0
@@ -798,7 +798,7 @@ YY_RULE_SETUP
 case 6:
 YY_RULE_SETUP
 #line 18 "c_lexer.flex"
-{ return T_RETURN; }
+{return T_RETURN; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP

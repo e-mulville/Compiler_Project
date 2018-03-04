@@ -3,7 +3,7 @@
 %{
 extern "C" int fileno(FILE *stream);
 
-#include "maths_parser.tab.hpp"
+#include "c_parser.tab.hpp"
 %}
 
 %%
@@ -15,7 +15,7 @@ extern "C" int fileno(FILE *stream);
 
 int		{ return T_INT; }
 
-return		{ return T_RETURN; }
+return	{return T_RETURN; }
 
 [(]             { return T_LBRACKET; }
 [)]             { return T_RBRACKET; }
