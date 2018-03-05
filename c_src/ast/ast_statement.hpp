@@ -41,15 +41,13 @@ public:
 
 	virtual void translate(	std::ostream &dst) const override
 	{
-		dst << "paaaaaa";
 		this_statement->translate(dst);
 		if (next != NULL)
 		{	
-			dst << ";pasta" << std::endl;
 			next->translate(dst);
+			dst << ";" << std::endl;
 			
-		}
-	dst << "paaaaaa";
+		} 
 	}
 };
 

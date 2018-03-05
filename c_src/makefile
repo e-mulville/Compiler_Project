@@ -9,7 +9,7 @@ c_parser.tab.cpp c_parser.tab.hpp : c_parser.y
 c_lexer.yy.cpp : c_lexer.flex c_parser.tab.hpp
 	flex -o c_lexer.yy.cpp  c_lexer.flex
 
-main.o : ast.hpp ast/*.hpp
+main.o : ast.hpp ast/*.hpp ast/ast_declarations.hpp
 
 
 bin/main : main.o c_parser.tab.o c_lexer.yy.o c_parser.tab.o
@@ -17,7 +17,7 @@ bin/main : main.o c_parser.tab.o c_lexer.yy.o c_parser.tab.o
 	g++ $(CPPFLAGS) -o bin/main $^
 
 clean :
-	rm c_src/*.o
+	rm ../c_src/*.o
 	rm bin/*
-	rm c_src/*.tab.cpp
-	rm c_src/*.yy.cpp
+	rm ../c_src/*.tab.cpp
+	rm ../c_src/*.yy.cpp 

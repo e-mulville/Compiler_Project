@@ -1,5 +1,5 @@
-#ifndef ast_operators_hpp
-#define ast_operators_hpp
+#ifndef ast_declaration_hpp
+#define ast_declaration_hpp
 
 #include <string>
 #include <iostream>
@@ -21,7 +21,6 @@ public:
 	{
 		dst<< type << " ";
         	identifier->translate(dst);
-		dst<<" ";
 	}
 };
 
@@ -63,8 +62,6 @@ public:
 	IntDeclaration(StatementPtr _identifier)
 	: Declaration("int", _identifier) {}
 
-	virtual const char *getType() const
-		{ return "int"; }
 };
 
 

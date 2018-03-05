@@ -1353,26 +1353,32 @@ yyreduce:
 #line 1354 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
+  case 21:
+#line 68 "c_parser.y" /* yacc.c:1646  */
+    { (yyval.statement) = (yyvsp[0].statement); }
+#line 1360 "c_parser.tab.cpp" /* yacc.c:1646  */
+    break;
+
   case 22:
 #line 70 "c_parser.y" /* yacc.c:1646  */
-    { std::cout << "return";}
-#line 1360 "c_parser.tab.cpp" /* yacc.c:1646  */
+    { (yyval.statement) = new Return((yyvsp[-1].statement)); }
+#line 1366 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 24:
 #line 74 "c_parser.y" /* yacc.c:1646  */
     {(yyval.statement) = new Number ((yyvsp[0].number));}
-#line 1366 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1372 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
 #line 75 "c_parser.y" /* yacc.c:1646  */
     {(yyval.statement) = new Variable (*(yyvsp[0].string));}
-#line 1372 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1378 "c_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1376 "c_parser.tab.cpp" /* yacc.c:1646  */
+#line 1382 "c_parser.tab.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
