@@ -3,7 +3,6 @@ CPPFLAGS += -I include
 
 all : bin/main
 
-
 c_parser.tab.cpp c_parser.tab.hpp : c_parser.y
 	bison -v -d c_parser.y -o c_parser.tab.cpp
 

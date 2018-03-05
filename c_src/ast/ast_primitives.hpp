@@ -43,4 +43,40 @@ public:
 };
 
 
+class DataType
+	: public Statement
+{
+public:
+	
+	std::string type;
+
+	DataType(): type(){}
+
+	virtual void translate(std::ostream &dst) const override
+	{
+		dst<< type;
+	}
+};
+
+class Int
+	: public DataType
+{
+public:
+	
+	std::string type;
+
+	Int():type("int"){}
+};
+
+class empty
+	: public Statement
+{
+public:
+
+	empty() {}
+
+	virtual void translate(std::ostream &dst) const override
+	{}
+};
+
 #endif

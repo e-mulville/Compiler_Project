@@ -9,6 +9,8 @@
 
 class Statement;
 
+
+
 typedef const Statement *StatementPtr;
 
 class Statement
@@ -23,5 +25,56 @@ public:
     //! Evaluate the tree using the given mapping of variables to numbers
 };
 
+
+class StatementPair
+	: public Statement
+{
+public:
+
+	StatementPtr this_statement;
+	StatementPtr next = NULL;
+
+	StatementPair(StatementPtr _this_statement, StatementPtr _next) :
+		this_statement(_this_statement)
+		,next(_next)
+	{}
+
+	virtual void translate(	std::ostream &dst) const override
+	{
+		dst << "paaaaaa";
+		this_statement->translate(dst);
+		if (next != NULL)
+		{	
+			dst << ";pasta" << std::endl;
+			next->translate(dst);
+			
+		}
+	dst << "paaaaaa";
+	}
+};
+
+class ArgumentPair
+	: public Statement
+{
+public:
+
+	StatementPtr this_statement;
+	StatementPtr next = NULL;
+
+	ArgumentPair(StatementPtr _this_statement, StatementPtr _next) :
+		this_statement(_this_statement)
+		,next(_next)
+	{}
+
+	virtual void translate(	std::ostream &dst) const override
+	{
+		this_statement->translate(dst);
+		if (next != NULL)
+		{
+			dst << ", ";
+			next->translate(dst);
+		}
+	}
+};
 
 #endif
