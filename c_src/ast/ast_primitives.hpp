@@ -17,7 +17,7 @@ public:
     const std::string getId() const
     { return id; }
 
-    virtual void translate(std::ostream &dst) const override
+    virtual void translate(std::ostream &dst, int &scope) const override
     {
         dst<<id;
     }
@@ -36,7 +36,7 @@ public:
     double getValue() const
     { return value; }
 
-    virtual void translate(std::ostream &dst) const override
+    virtual void translate(std::ostream &dst, int &scope) const override
     {
         dst<<value;
     }
@@ -52,20 +52,10 @@ public:
 
 	DataType(): type(){}
 
-	virtual void translate(std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{
 		dst<< type;
 	}
-};
-
-class Int
-	: public DataType
-{
-public:
-	
-	std::string type;
-
-	Int():type("int"){}
 };
 
 class empty
@@ -75,7 +65,7 @@ public:
 
 	empty() {}
 
-	virtual void translate(std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{}
 };
 

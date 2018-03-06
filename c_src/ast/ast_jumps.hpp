@@ -9,7 +9,7 @@ class Jump
 {
 public:
 	
-	virtual void translate(	std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{}
 };
 
@@ -22,10 +22,10 @@ public:
 	Return(StatementPtr _value)
 	: value(_value) {}
 
-	virtual void translate(	std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{
 		dst << "return ";
-		value->translate(dst);
+		value->translate(dst, scope);
 	}
 	
 };

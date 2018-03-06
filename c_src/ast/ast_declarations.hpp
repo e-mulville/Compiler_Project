@@ -17,10 +17,14 @@ protected:
 	{}
 public:
 	
-	virtual void translate(	std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{
 		dst<< type << " ";
-        	identifier->translate(dst);
+        	identifier->translate(dst, scope);
+	}
+
+	std::string getId() const override {
+		return identifier->getId();
 	}
 };
 
@@ -42,14 +46,18 @@ public:
 	, statement_list(_statement_list)
 	{}
 
-	virtual void translate(std::ostream &dst) const override
+	
+
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{
-		var_dec->translate(dst);
+		dst<<"def";
+		var_dec->translate(dst, scope);
 		dst<<" (";
-		arg_list->translate(dst);
-		dst << ")" << std::endl << "{" << std::endl;
-		statement_list->translate(dst);
-		dst << "}" << std::endl;
+		arg_list->translate(dst, scope);
+		dst << "):" << std::endl;
+		scope++;
+		statement_list->translate(dst, scope);
+		scope--;
 	}
 };
 
@@ -60,7 +68,7 @@ class IntDeclaration
 public:
 	
 	IntDeclaration(StatementPtr _identifier)
-	: Declaration("int", _identifier) {}
+	: Declaration("", _identifier) {}
 
 };
 

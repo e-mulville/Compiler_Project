@@ -18,7 +18,7 @@ public:
 	left(_left)
 	, right(_right) {}
 
-	virtual void translate(	std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{}
 };
 
@@ -31,11 +31,12 @@ public:
 	: Assignment(_left, _right)
 	{}
 
-	virtual void translate(	std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{
-		left->translate(dst);
+		dst<< left->getId() << "=" << right->getValue();
+		left->translate(dst, scope);
 		dst << " = ";
-		right->translate(dst);
+		right->translate(dst, scope);
 	}
 	
 };

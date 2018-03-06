@@ -16,13 +16,17 @@ typedef const Statement *StatementPtr;
 class Statement
 {
 public:
-    virtual ~Statement()
-    {}
+	virtual ~Statement()
+	{}	
 
-    //! Tell and Statement to translate to stream
-    virtual void translate(std::ostream &dst) const =0;
+	int scope;
+	//! Tell and Statement to translate to stream
+	virtual void translate(std::ostream &dst, int &scope) const =0;
 
-    //! Evaluate the tree using the given mapping of variables to numbers
+	virtual double getValue() const;
+	virtual std::string getId() const;
+
+	//! Evaluate the tree using the given mapping of variables to numbers
 };
 
 
@@ -39,13 +43,16 @@ public:
 		,next(_next)
 	{}
 
-	virtual void translate(	std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{
-		this_statement->translate(dst);
+		this_statement->translate(dst, scope);
 		if (next != NULL)
 		{	
-			next->translate(dst);
-			dst << ";" << std::endl;
+			for(int x = 0; x < scope; x++){
+				dst << "	";
+			}
+			next->translate(dst, scope);
+			dst << std::endl;
 			
 		} 
 	}
@@ -64,13 +71,37 @@ public:
 		,next(_next)
 	{}
 
-	virtual void translate(	std::ostream &dst) const override
+	virtual void translate(std::ostream &dst, int &scope) const override
 	{
-		this_statement->translate(dst);
+		this_statement->translate(dst, scope);
 		if (next != NULL)
 		{
 			dst << ", ";
-			next->translate(dst);
+			next->translate(dst, scope);
+		}
+	}
+};
+
+class ProgramPair
+	: public Statement
+{
+public:
+
+	StatementPtr this_statement;
+	StatementPtr next = NULL;
+
+	ProgramPair(StatementPtr _this_statement, StatementPtr _next) :
+		this_statement(_this_statement)
+		,next(_next)
+	{}
+
+	virtual void translate(std::ostream &dst, int &scope) const override
+	{
+		this_statement->translate(dst, scope);
+		if (next != NULL)
+		{
+			dst << std::endl;
+			next->translate(dst, scope);
 		}
 	}
 };
