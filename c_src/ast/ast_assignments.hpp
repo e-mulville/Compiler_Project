@@ -18,8 +18,17 @@ public:
 	left(_left)
 	, right(_right) {}
 
-	virtual void translate(std::ostream &dst, int &scope) const override
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
+
+	std::string getId() const override{
+		return left->getId();
+	}
+
+	double getValue() const override
+    	{ 
+		return right->getValue();
+	}
 };
 
 class Assign
@@ -31,12 +40,12 @@ public:
 	: Assignment(_left, _right)
 	{}
 
-	virtual void translate(std::ostream &dst, int &scope) const override
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		dst<< left->getId() << "=" << right->getValue();
-		left->translate(dst, scope);
+		
+		left->translate(dst, scope, scope_bindings);
 		dst << " = ";
-		right->translate(dst, scope);
+		right->translate(dst, scope, scope_bindings);
 	}
 	
 };

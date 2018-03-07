@@ -9,16 +9,11 @@ int main(int argc, char **argv)
 	const Statement *ast=parseAST();
 	int scope = 0;
 	
-	struct translate_pair {
-		int scope;
-		int identifier;
-	}
+	std::map<std::string,double> scope_bindings;	
 
-	
-
-	ast->translate(std::cout, scope);
+	ast->translate(std::cout, scope, scope_bindings);
 	std::cout << std::endl << "if __name__ == \"__main__\":" << std::endl;
-	std::cout << "import sys" << std::endl << "ret=main()" << std::endl << "sys.exit(ret)";
+	std::cout << "	import sys" << std::endl << "	ret=main()" << std::endl << "	sys.exit(ret)" << std::endl;
 
 	
 	return 0;

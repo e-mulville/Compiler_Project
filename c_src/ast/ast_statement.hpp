@@ -16,16 +16,16 @@ typedef const Statement *StatementPtr;
 class Statement
 {
 public:
-	virtual ~Statement()
-	{}	
+	virtual ~Statement(){}	
 
 	int scope;
+
+
 	//! Tell and Statement to translate to stream
-	virtual void translate(std::ostream &dst, int &scope) const =0;
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const =0;
 
-	virtual double getValue() const;
-	virtual std::string getId() const;
-
+	virtual std::string getId() const { return "error";}
+	virtual double getValue() const { return 99999;}
 	//! Evaluate the tree using the given mapping of variables to numbers
 };
 
@@ -43,15 +43,15 @@ public:
 		,next(_next)
 	{}
 
-	virtual void translate(std::ostream &dst, int &scope) const override
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		this_statement->translate(dst, scope);
+		this_statement->translate(dst, scope, scope_bindings);
 		if (next != NULL)
 		{	
 			for(int x = 0; x < scope; x++){
 				dst << "	";
 			}
-			next->translate(dst, scope);
+			next->translate(dst, scope, scope_bindings);
 			dst << std::endl;
 			
 		} 
@@ -71,13 +71,13 @@ public:
 		,next(_next)
 	{}
 
-	virtual void translate(std::ostream &dst, int &scope) const override
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		this_statement->translate(dst, scope);
+		this_statement->translate(dst, scope, scope_bindings);
 		if (next != NULL)
 		{
 			dst << ", ";
-			next->translate(dst, scope);
+			next->translate(dst, scope, scope_bindings);
 		}
 	}
 };
@@ -95,13 +95,13 @@ public:
 		,next(_next)
 	{}
 
-	virtual void translate(std::ostream &dst, int &scope) const override
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		this_statement->translate(dst, scope);
+		this_statement->translate(dst, scope, scope_bindings);
 		if (next != NULL)
 		{
 			dst << std::endl;
-			next->translate(dst, scope);
+			next->translate(dst, scope, scope_bindings);
 		}
 	}
 };

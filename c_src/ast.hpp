@@ -6,6 +6,9 @@
 #include "ast/ast_declarations.hpp"
 #include "ast/ast_jumps.hpp"
 #include "ast/ast_assignments.hpp"
+#include "ast/ast_controls.hpp"
+#include "ast/ast_logics.hpp"
+#include "ast/ast_operations.hpp"
 
 
 extern const Statement *parseAST();

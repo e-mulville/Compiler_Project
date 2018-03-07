@@ -67,9 +67,21 @@ extern int yydebug;
     T_COLON = 264,
     T_COMMA = 265,
     T_INT = 266,
-    T_RETURN = 267,
-    T_NUMBER = 268,
-    T_VARIABLE = 269
+    T_VOID = 267,
+    T_RETURN = 268,
+    T_IF = 269,
+    T_ELSE = 270,
+    T_WHILE = 271,
+    T_AND = 272,
+    T_OR = 273,
+    T_ADD = 274,
+    T_SUB = 275,
+    T_MULT = 276,
+    T_EQUAL = 277,
+    T_LESS = 278,
+    T_EQLT = 279,
+    T_NUMBER = 280,
+    T_VARIABLE = 281
   };
 #endif
 
@@ -84,7 +96,7 @@ union YYSTYPE
 	double number;
 	std::string *string;
 
-#line 88 "c_parser.tab.hpp" /* yacc.c:1909  */
+#line 100 "c_parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -3,6 +3,9 @@ Terminals unused in grammar
    T_COLON
 
 
+State 69 conflicts: 3 reduce/reduce
+
+
 Grammar
 
     0 $accept: ROOT $end
@@ -15,90 +18,132 @@ Grammar
     4 STATEMENT: DECLARATION
     5          | ASSIGNMENT
     6          | JUMP
+    7          | CONTROL
 
-    7 STATEMENT_LIST: %empty
-    8               | STATEMENT_LIST STATEMENT
+    8 STATEMENT_LIST: %empty
+    9               | STATEMENT_LIST STATEMENT
 
-    9 DECLARATION: FUNC_DECLARATION
-   10            | VAR_DECLARATION T_SEMICOLON
+   10 DECLARATION: FUNC_DECLARATION
+   11            | VAR_DECLARATION
 
-   11 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   12 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
 
-   12 VAR_DECLARATION: T_INT VALUE
+   13 VAR_DECLARATION: T_INT VALUE
+   14                | T_INT VALUE T_SEMICOLON
+   15                | T_VOID VALUE
+   16                | T_VOID VALUE T_SEMICOLON
 
-   13 ARGUMENT_LIST: %empty
-   14              | ARGUMENT
-   15              | ARGUMENT_LIST T_COMMA ARGUMENT
+   17 ARGUMENT_LIST: %empty
+   18              | ARGUMENT
+   19              | ARGUMENT_LIST T_COMMA ARGUMENT
 
-   16 ARGUMENT: VAR_DECLARATION
+   20 ARGUMENT: VAR_DECLARATION
 
-   17 ASSIGNMENT: ASSIGN
+   21 ASSIGNMENT: ASSIGN
 
-   18 ASSIGN: VAR_DECLARATION T_ASSIGN EXPR T_SEMICOLON
-   19       | VALUE T_ASSIGN EXPR T_SEMICOLON
+   22 ASSIGN: VAR_DECLARATION T_ASSIGN EXPR T_SEMICOLON
+   23       | VALUE T_ASSIGN EXPR T_SEMICOLON
 
-   20 JUMP: RETURN
+   24 JUMP: RETURN
 
-   21 RETURN: T_RETURN VALUE T_SEMICOLON
+   25 RETURN: T_RETURN VALUE T_SEMICOLON
 
-   22 EXPR: VALUE
+   26 CONTROL: IF
+   27        | IF T_ELSE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   28        | T_WHILE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
 
-   23 VALUE: T_NUMBER
-   24      | T_VARIABLE
+   29 IF: T_IF T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+   30 LOGIC: EXPR
+   31      | LOGIC T_EQUAL EXPR
+   32      | LOGIC T_LESS EXPR
+   33      | LOGIC T_EQLT EXPR
+   34      | LOGIC T_AND EXPR
+   35      | LOGIC T_OR EXPR
+
+   36 EXPR: EXPR2
+   37     | EXPR T_MULT EXPR2
+
+   38 EXPR2: VALUE
+   39      | EXPR T_ADD VALUE
+   40      | EXPR T_SUB VALUE
+
+   41 VALUE: T_NUMBER
+   42      | T_VARIABLE
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-T_ASSIGN (258) 18 19
-T_LBRACKET (259) 11
-T_RBRACKET (260) 11
-T_LCURLBRACKET (261) 11
-T_RCURLBRACKET (262) 11
-T_SEMICOLON (263) 10 18 19 21
+T_ASSIGN (258) 22 23
+T_LBRACKET (259) 12 27 28 29
+T_RBRACKET (260) 12 27 28 29
+T_LCURLBRACKET (261) 12 27 28 29
+T_RCURLBRACKET (262) 12 27 28 29
+T_SEMICOLON (263) 14 16 22 23 25
 T_COLON (264)
-T_COMMA (265) 15
-T_INT (266) 12
-T_RETURN (267) 21
-T_NUMBER (268) 23
-T_VARIABLE (269) 24
+T_COMMA (265) 19
+T_INT (266) 13 14
+T_VOID (267) 15 16
+T_RETURN (268) 25
+T_IF (269) 29
+T_ELSE (270) 27
+T_WHILE (271) 28
+T_AND (272) 34
+T_OR (273) 35
+T_ADD (274) 39
+T_SUB (275) 40
+T_MULT (276) 37
+T_EQUAL (277) 31
+T_LESS (278) 32
+T_EQLT (279) 33
+T_NUMBER (280) 41
+T_VARIABLE (281) 42
 
 
 Nonterminals, with rules where they appear
 
-$accept (15)
+$accept (27)
     on left: 0
-ROOT (16)
+ROOT (28)
     on left: 1, on right: 0
-PROGRAM (17)
+PROGRAM (29)
     on left: 2 3, on right: 1 3
-STATEMENT (18)
-    on left: 4 5 6, on right: 3 8
-STATEMENT_LIST (19)
-    on left: 7 8, on right: 8 11
-DECLARATION (20)
-    on left: 9 10, on right: 4
-FUNC_DECLARATION (21)
-    on left: 11, on right: 9
-VAR_DECLARATION (22)
-    on left: 12, on right: 10 11 16 18
-ARGUMENT_LIST (23)
-    on left: 13 14 15, on right: 11 15
-ARGUMENT (24)
-    on left: 16, on right: 14 15
-ASSIGNMENT (25)
-    on left: 17, on right: 5
-ASSIGN (26)
-    on left: 18 19, on right: 17
-JUMP (27)
-    on left: 20, on right: 6
-RETURN (28)
-    on left: 21, on right: 20
-EXPR (29)
-    on left: 22, on right: 18 19
-VALUE (30)
-    on left: 23 24, on right: 12 19 21 22
+STATEMENT (30)
+    on left: 4 5 6 7, on right: 3 9
+STATEMENT_LIST (31)
+    on left: 8 9, on right: 9 12 27 28 29
+DECLARATION (32)
+    on left: 10 11, on right: 4
+FUNC_DECLARATION (33)
+    on left: 12, on right: 10
+VAR_DECLARATION (34)
+    on left: 13 14 15 16, on right: 11 12 20 22
+ARGUMENT_LIST (35)
+    on left: 17 18 19, on right: 12 19
+ARGUMENT (36)
+    on left: 20, on right: 18 19
+ASSIGNMENT (37)
+    on left: 21, on right: 5
+ASSIGN (38)
+    on left: 22 23, on right: 21
+JUMP (39)
+    on left: 24, on right: 6
+RETURN (40)
+    on left: 25, on right: 24
+CONTROL (41)
+    on left: 26 27 28, on right: 7
+IF (42)
+    on left: 29, on right: 26 27
+LOGIC (43)
+    on left: 30 31 32 33 34 35, on right: 27 28 29 31 32 33 34 35
+EXPR (44)
+    on left: 36 37, on right: 22 23 30 31 32 33 34 35 37 39 40
+EXPR2 (45)
+    on left: 38 39 40, on right: 36 37
+VALUE (46)
+    on left: 41 42, on right: 13 14 15 16 23 25 38 39 40
 
 
 State 0
@@ -124,21 +169,26 @@ State 2
     3 PROGRAM: PROGRAM . STATEMENT
 
     T_INT       shift, and go to state 4
-    T_RETURN    shift, and go to state 5
-    T_NUMBER    shift, and go to state 6
-    T_VARIABLE  shift, and go to state 7
+    T_VOID      shift, and go to state 5
+    T_RETURN    shift, and go to state 6
+    T_IF        shift, and go to state 7
+    T_WHILE     shift, and go to state 8
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
 
     $default  reduce using rule 1 (ROOT)
 
-    STATEMENT         go to state 8
-    DECLARATION       go to state 9
-    FUNC_DECLARATION  go to state 10
-    VAR_DECLARATION   go to state 11
-    ASSIGNMENT        go to state 12
-    ASSIGN            go to state 13
-    JUMP              go to state 14
-    RETURN            go to state 15
-    VALUE             go to state 16
+    STATEMENT         go to state 11
+    DECLARATION       go to state 12
+    FUNC_DECLARATION  go to state 13
+    VAR_DECLARATION   go to state 14
+    ASSIGNMENT        go to state 15
+    ASSIGN            go to state 16
+    JUMP              go to state 17
+    RETURN            go to state 18
+    CONTROL           go to state 19
+    IF                go to state 20
+    VALUE             go to state 21
 
 
 State 3
@@ -150,290 +200,844 @@ State 3
 
 State 4
 
-   12 VAR_DECLARATION: T_INT . VALUE
+   13 VAR_DECLARATION: T_INT . VALUE
+   14                | T_INT . VALUE T_SEMICOLON
 
-    T_NUMBER    shift, and go to state 6
-    T_VARIABLE  shift, and go to state 7
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
 
-    VALUE  go to state 17
+    VALUE  go to state 22
 
 
 State 5
 
-   21 RETURN: T_RETURN . VALUE T_SEMICOLON
+   15 VAR_DECLARATION: T_VOID . VALUE
+   16                | T_VOID . VALUE T_SEMICOLON
 
-    T_NUMBER    shift, and go to state 6
-    T_VARIABLE  shift, and go to state 7
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
 
-    VALUE  go to state 18
+    VALUE  go to state 23
 
 
 State 6
 
-   23 VALUE: T_NUMBER .
+   25 RETURN: T_RETURN . VALUE T_SEMICOLON
 
-    $default  reduce using rule 23 (VALUE)
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    VALUE  go to state 24
 
 
 State 7
 
-   24 VALUE: T_VARIABLE .
+   29 IF: T_IF . T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
 
-    $default  reduce using rule 24 (VALUE)
+    T_LBRACKET  shift, and go to state 25
 
 
 State 8
+
+   28 CONTROL: T_WHILE . T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_LBRACKET  shift, and go to state 26
+
+
+State 9
+
+   41 VALUE: T_NUMBER .
+
+    $default  reduce using rule 41 (VALUE)
+
+
+State 10
+
+   42 VALUE: T_VARIABLE .
+
+    $default  reduce using rule 42 (VALUE)
+
+
+State 11
 
     3 PROGRAM: PROGRAM STATEMENT .
 
     $default  reduce using rule 3 (PROGRAM)
 
 
-State 9
+State 12
 
     4 STATEMENT: DECLARATION .
 
     $default  reduce using rule 4 (STATEMENT)
 
 
-State 10
+State 13
 
-    9 DECLARATION: FUNC_DECLARATION .
+   10 DECLARATION: FUNC_DECLARATION .
 
-    $default  reduce using rule 9 (DECLARATION)
-
-
-State 11
-
-   10 DECLARATION: VAR_DECLARATION . T_SEMICOLON
-   11 FUNC_DECLARATION: VAR_DECLARATION . T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
-   18 ASSIGN: VAR_DECLARATION . T_ASSIGN EXPR T_SEMICOLON
-
-    T_ASSIGN     shift, and go to state 19
-    T_LBRACKET   shift, and go to state 20
-    T_SEMICOLON  shift, and go to state 21
+    $default  reduce using rule 10 (DECLARATION)
 
 
-State 12
+State 14
+
+   11 DECLARATION: VAR_DECLARATION .
+   12 FUNC_DECLARATION: VAR_DECLARATION . T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   22 ASSIGN: VAR_DECLARATION . T_ASSIGN EXPR T_SEMICOLON
+
+    T_ASSIGN    shift, and go to state 27
+    T_LBRACKET  shift, and go to state 28
+
+    $default  reduce using rule 11 (DECLARATION)
+
+
+State 15
 
     5 STATEMENT: ASSIGNMENT .
 
     $default  reduce using rule 5 (STATEMENT)
 
 
-State 13
+State 16
 
-   17 ASSIGNMENT: ASSIGN .
+   21 ASSIGNMENT: ASSIGN .
 
-    $default  reduce using rule 17 (ASSIGNMENT)
+    $default  reduce using rule 21 (ASSIGNMENT)
 
 
-State 14
+State 17
 
     6 STATEMENT: JUMP .
 
     $default  reduce using rule 6 (STATEMENT)
 
 
-State 15
-
-   20 JUMP: RETURN .
-
-    $default  reduce using rule 20 (JUMP)
-
-
-State 16
-
-   19 ASSIGN: VALUE . T_ASSIGN EXPR T_SEMICOLON
-
-    T_ASSIGN  shift, and go to state 22
-
-
-State 17
-
-   12 VAR_DECLARATION: T_INT VALUE .
-
-    $default  reduce using rule 12 (VAR_DECLARATION)
-
-
 State 18
 
-   21 RETURN: T_RETURN VALUE . T_SEMICOLON
+   24 JUMP: RETURN .
 
-    T_SEMICOLON  shift, and go to state 23
+    $default  reduce using rule 24 (JUMP)
 
 
 State 19
 
-   18 ASSIGN: VAR_DECLARATION T_ASSIGN . EXPR T_SEMICOLON
+    7 STATEMENT: CONTROL .
 
-    T_NUMBER    shift, and go to state 6
-    T_VARIABLE  shift, and go to state 7
-
-    EXPR   go to state 24
-    VALUE  go to state 25
+    $default  reduce using rule 7 (STATEMENT)
 
 
 State 20
 
-   11 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET . ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   26 CONTROL: IF .
+   27        | IF . T_ELSE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
 
-    T_INT  shift, and go to state 4
+    T_ELSE  shift, and go to state 29
 
-    $default  reduce using rule 13 (ARGUMENT_LIST)
-
-    VAR_DECLARATION  go to state 26
-    ARGUMENT_LIST    go to state 27
-    ARGUMENT         go to state 28
+    $default  reduce using rule 26 (CONTROL)
 
 
 State 21
 
-   10 DECLARATION: VAR_DECLARATION T_SEMICOLON .
+   23 ASSIGN: VALUE . T_ASSIGN EXPR T_SEMICOLON
 
-    $default  reduce using rule 10 (DECLARATION)
+    T_ASSIGN  shift, and go to state 30
 
 
 State 22
 
-   19 ASSIGN: VALUE T_ASSIGN . EXPR T_SEMICOLON
+   13 VAR_DECLARATION: T_INT VALUE .
+   14                | T_INT VALUE . T_SEMICOLON
 
-    T_NUMBER    shift, and go to state 6
-    T_VARIABLE  shift, and go to state 7
+    T_SEMICOLON  shift, and go to state 31
 
-    EXPR   go to state 29
-    VALUE  go to state 25
+    $default  reduce using rule 13 (VAR_DECLARATION)
 
 
 State 23
 
-   21 RETURN: T_RETURN VALUE T_SEMICOLON .
+   15 VAR_DECLARATION: T_VOID VALUE .
+   16                | T_VOID VALUE . T_SEMICOLON
 
-    $default  reduce using rule 21 (RETURN)
+    T_SEMICOLON  shift, and go to state 32
+
+    $default  reduce using rule 15 (VAR_DECLARATION)
 
 
 State 24
 
-   18 ASSIGN: VAR_DECLARATION T_ASSIGN EXPR . T_SEMICOLON
-
-    T_SEMICOLON  shift, and go to state 30
-
-
-State 25
-
-   22 EXPR: VALUE .
-
-    $default  reduce using rule 22 (EXPR)
-
-
-State 26
-
-   16 ARGUMENT: VAR_DECLARATION .
-
-    $default  reduce using rule 16 (ARGUMENT)
-
-
-State 27
-
-   11 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST . T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
-   15 ARGUMENT_LIST: ARGUMENT_LIST . T_COMMA ARGUMENT
-
-    T_RBRACKET  shift, and go to state 31
-    T_COMMA     shift, and go to state 32
-
-
-State 28
-
-   14 ARGUMENT_LIST: ARGUMENT .
-
-    $default  reduce using rule 14 (ARGUMENT_LIST)
-
-
-State 29
-
-   19 ASSIGN: VALUE T_ASSIGN EXPR . T_SEMICOLON
+   25 RETURN: T_RETURN VALUE . T_SEMICOLON
 
     T_SEMICOLON  shift, and go to state 33
 
 
+State 25
+
+   29 IF: T_IF T_LBRACKET . LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    LOGIC  go to state 34
+    EXPR   go to state 35
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 26
+
+   28 CONTROL: T_WHILE T_LBRACKET . LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    LOGIC  go to state 38
+    EXPR   go to state 35
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 27
+
+   22 ASSIGN: VAR_DECLARATION T_ASSIGN . EXPR T_SEMICOLON
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 39
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 28
+
+   12 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET . ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_INT   shift, and go to state 4
+    T_VOID  shift, and go to state 5
+
+    $default  reduce using rule 17 (ARGUMENT_LIST)
+
+    VAR_DECLARATION  go to state 40
+    ARGUMENT_LIST    go to state 41
+    ARGUMENT         go to state 42
+
+
+State 29
+
+   27 CONTROL: IF T_ELSE . T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_LBRACKET  shift, and go to state 43
+
+
 State 30
 
-   18 ASSIGN: VAR_DECLARATION T_ASSIGN EXPR T_SEMICOLON .
+   23 ASSIGN: VALUE T_ASSIGN . EXPR T_SEMICOLON
 
-    $default  reduce using rule 18 (ASSIGN)
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 44
+    EXPR2  go to state 36
+    VALUE  go to state 37
 
 
 State 31
 
-   11 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET . T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   14 VAR_DECLARATION: T_INT VALUE T_SEMICOLON .
 
-    T_LCURLBRACKET  shift, and go to state 34
+    $default  reduce using rule 14 (VAR_DECLARATION)
 
 
 State 32
 
-   15 ARGUMENT_LIST: ARGUMENT_LIST T_COMMA . ARGUMENT
+   16 VAR_DECLARATION: T_VOID VALUE T_SEMICOLON .
 
-    T_INT  shift, and go to state 4
-
-    VAR_DECLARATION  go to state 26
-    ARGUMENT         go to state 35
+    $default  reduce using rule 16 (VAR_DECLARATION)
 
 
 State 33
 
-   19 ASSIGN: VALUE T_ASSIGN EXPR T_SEMICOLON .
+   25 RETURN: T_RETURN VALUE T_SEMICOLON .
 
-    $default  reduce using rule 19 (ASSIGN)
+    $default  reduce using rule 25 (RETURN)
 
 
 State 34
 
-   11 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET . STATEMENT_LIST T_RCURLBRACKET
+   29 IF: T_IF T_LBRACKET LOGIC . T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   31 LOGIC: LOGIC . T_EQUAL EXPR
+   32      | LOGIC . T_LESS EXPR
+   33      | LOGIC . T_EQLT EXPR
+   34      | LOGIC . T_AND EXPR
+   35      | LOGIC . T_OR EXPR
 
-    $default  reduce using rule 7 (STATEMENT_LIST)
-
-    STATEMENT_LIST  go to state 36
+    T_RBRACKET  shift, and go to state 45
+    T_AND       shift, and go to state 46
+    T_OR        shift, and go to state 47
+    T_EQUAL     shift, and go to state 48
+    T_LESS      shift, and go to state 49
+    T_EQLT      shift, and go to state 50
 
 
 State 35
 
-   15 ARGUMENT_LIST: ARGUMENT_LIST T_COMMA ARGUMENT .
+   30 LOGIC: EXPR .
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
 
-    $default  reduce using rule 15 (ARGUMENT_LIST)
+    T_ADD   shift, and go to state 51
+    T_SUB   shift, and go to state 52
+    T_MULT  shift, and go to state 53
+
+    $default  reduce using rule 30 (LOGIC)
 
 
 State 36
 
-    8 STATEMENT_LIST: STATEMENT_LIST . STATEMENT
-   11 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST . T_RCURLBRACKET
+   36 EXPR: EXPR2 .
 
-    T_RCURLBRACKET  shift, and go to state 37
-    T_INT           shift, and go to state 4
-    T_RETURN        shift, and go to state 5
-    T_NUMBER        shift, and go to state 6
-    T_VARIABLE      shift, and go to state 7
-
-    STATEMENT         go to state 38
-    DECLARATION       go to state 9
-    FUNC_DECLARATION  go to state 10
-    VAR_DECLARATION   go to state 11
-    ASSIGNMENT        go to state 12
-    ASSIGN            go to state 13
-    JUMP              go to state 14
-    RETURN            go to state 15
-    VALUE             go to state 16
+    $default  reduce using rule 36 (EXPR)
 
 
 State 37
 
-   11 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET .
+   38 EXPR2: VALUE .
 
-    $default  reduce using rule 11 (FUNC_DECLARATION)
+    $default  reduce using rule 38 (EXPR2)
 
 
 State 38
 
-    8 STATEMENT_LIST: STATEMENT_LIST STATEMENT .
+   28 CONTROL: T_WHILE T_LBRACKET LOGIC . T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   31 LOGIC: LOGIC . T_EQUAL EXPR
+   32      | LOGIC . T_LESS EXPR
+   33      | LOGIC . T_EQLT EXPR
+   34      | LOGIC . T_AND EXPR
+   35      | LOGIC . T_OR EXPR
+
+    T_RBRACKET  shift, and go to state 54
+    T_AND       shift, and go to state 46
+    T_OR        shift, and go to state 47
+    T_EQUAL     shift, and go to state 48
+    T_LESS      shift, and go to state 49
+    T_EQLT      shift, and go to state 50
+
+
+State 39
+
+   22 ASSIGN: VAR_DECLARATION T_ASSIGN EXPR . T_SEMICOLON
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_SEMICOLON  shift, and go to state 55
+    T_ADD        shift, and go to state 51
+    T_SUB        shift, and go to state 52
+    T_MULT       shift, and go to state 53
+
+
+State 40
+
+   20 ARGUMENT: VAR_DECLARATION .
+
+    $default  reduce using rule 20 (ARGUMENT)
+
+
+State 41
+
+   12 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST . T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   19 ARGUMENT_LIST: ARGUMENT_LIST . T_COMMA ARGUMENT
+
+    T_RBRACKET  shift, and go to state 56
+    T_COMMA     shift, and go to state 57
+
+
+State 42
+
+   18 ARGUMENT_LIST: ARGUMENT .
+
+    $default  reduce using rule 18 (ARGUMENT_LIST)
+
+
+State 43
+
+   27 CONTROL: IF T_ELSE T_LBRACKET . LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    LOGIC  go to state 58
+    EXPR   go to state 35
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 44
+
+   23 ASSIGN: VALUE T_ASSIGN EXPR . T_SEMICOLON
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_SEMICOLON  shift, and go to state 59
+    T_ADD        shift, and go to state 51
+    T_SUB        shift, and go to state 52
+    T_MULT       shift, and go to state 53
+
+
+State 45
+
+   29 IF: T_IF T_LBRACKET LOGIC T_RBRACKET . T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_LCURLBRACKET  shift, and go to state 60
+
+
+State 46
+
+   34 LOGIC: LOGIC T_AND . EXPR
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 61
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 47
+
+   35 LOGIC: LOGIC T_OR . EXPR
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 62
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 48
+
+   31 LOGIC: LOGIC T_EQUAL . EXPR
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 63
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 49
+
+   32 LOGIC: LOGIC T_LESS . EXPR
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 64
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 50
+
+   33 LOGIC: LOGIC T_EQLT . EXPR
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 65
+    EXPR2  go to state 36
+    VALUE  go to state 37
+
+
+State 51
+
+   39 EXPR2: EXPR T_ADD . VALUE
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    VALUE  go to state 66
+
+
+State 52
+
+   40 EXPR2: EXPR T_SUB . VALUE
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    VALUE  go to state 67
+
+
+State 53
+
+   37 EXPR: EXPR T_MULT . EXPR2
+
+    T_NUMBER    shift, and go to state 9
+    T_VARIABLE  shift, and go to state 10
+
+    EXPR   go to state 68
+    EXPR2  go to state 69
+    VALUE  go to state 37
+
+
+State 54
+
+   28 CONTROL: T_WHILE T_LBRACKET LOGIC T_RBRACKET . T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_LCURLBRACKET  shift, and go to state 70
+
+
+State 55
+
+   22 ASSIGN: VAR_DECLARATION T_ASSIGN EXPR T_SEMICOLON .
+
+    $default  reduce using rule 22 (ASSIGN)
+
+
+State 56
+
+   12 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET . T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_LCURLBRACKET  shift, and go to state 71
+
+
+State 57
+
+   19 ARGUMENT_LIST: ARGUMENT_LIST T_COMMA . ARGUMENT
+
+    T_INT   shift, and go to state 4
+    T_VOID  shift, and go to state 5
+
+    VAR_DECLARATION  go to state 40
+    ARGUMENT         go to state 72
+
+
+State 58
+
+   27 CONTROL: IF T_ELSE T_LBRACKET LOGIC . T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+   31 LOGIC: LOGIC . T_EQUAL EXPR
+   32      | LOGIC . T_LESS EXPR
+   33      | LOGIC . T_EQLT EXPR
+   34      | LOGIC . T_AND EXPR
+   35      | LOGIC . T_OR EXPR
+
+    T_RBRACKET  shift, and go to state 73
+    T_AND       shift, and go to state 46
+    T_OR        shift, and go to state 47
+    T_EQUAL     shift, and go to state 48
+    T_LESS      shift, and go to state 49
+    T_EQLT      shift, and go to state 50
+
+
+State 59
+
+   23 ASSIGN: VALUE T_ASSIGN EXPR T_SEMICOLON .
+
+    $default  reduce using rule 23 (ASSIGN)
+
+
+State 60
+
+   29 IF: T_IF T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET . STATEMENT_LIST T_RCURLBRACKET
 
     $default  reduce using rule 8 (STATEMENT_LIST)
+
+    STATEMENT_LIST  go to state 74
+
+
+State 61
+
+   34 LOGIC: LOGIC T_AND EXPR .
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_ADD   shift, and go to state 51
+    T_SUB   shift, and go to state 52
+    T_MULT  shift, and go to state 53
+
+    $default  reduce using rule 34 (LOGIC)
+
+
+State 62
+
+   35 LOGIC: LOGIC T_OR EXPR .
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_ADD   shift, and go to state 51
+    T_SUB   shift, and go to state 52
+    T_MULT  shift, and go to state 53
+
+    $default  reduce using rule 35 (LOGIC)
+
+
+State 63
+
+   31 LOGIC: LOGIC T_EQUAL EXPR .
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_ADD   shift, and go to state 51
+    T_SUB   shift, and go to state 52
+    T_MULT  shift, and go to state 53
+
+    $default  reduce using rule 31 (LOGIC)
+
+
+State 64
+
+   32 LOGIC: LOGIC T_LESS EXPR .
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_ADD   shift, and go to state 51
+    T_SUB   shift, and go to state 52
+    T_MULT  shift, and go to state 53
+
+    $default  reduce using rule 32 (LOGIC)
+
+
+State 65
+
+   33 LOGIC: LOGIC T_EQLT EXPR .
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_ADD   shift, and go to state 51
+    T_SUB   shift, and go to state 52
+    T_MULT  shift, and go to state 53
+
+    $default  reduce using rule 33 (LOGIC)
+
+
+State 66
+
+   39 EXPR2: EXPR T_ADD VALUE .
+
+    $default  reduce using rule 39 (EXPR2)
+
+
+State 67
+
+   40 EXPR2: EXPR T_SUB VALUE .
+
+    $default  reduce using rule 40 (EXPR2)
+
+
+State 68
+
+   37 EXPR: EXPR . T_MULT EXPR2
+   39 EXPR2: EXPR . T_ADD VALUE
+   40      | EXPR . T_SUB VALUE
+
+    T_ADD   shift, and go to state 51
+    T_SUB   shift, and go to state 52
+    T_MULT  shift, and go to state 53
+
+
+State 69
+
+   36 EXPR: EXPR2 .
+   37     | EXPR T_MULT EXPR2 .
+
+    T_ADD     reduce using rule 36 (EXPR)
+    T_ADD     [reduce using rule 37 (EXPR)]
+    T_SUB     reduce using rule 36 (EXPR)
+    T_SUB     [reduce using rule 37 (EXPR)]
+    T_MULT    reduce using rule 36 (EXPR)
+    T_MULT    [reduce using rule 37 (EXPR)]
+    $default  reduce using rule 37 (EXPR)
+
+
+State 70
+
+   28 CONTROL: T_WHILE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET . STATEMENT_LIST T_RCURLBRACKET
+
+    $default  reduce using rule 8 (STATEMENT_LIST)
+
+    STATEMENT_LIST  go to state 75
+
+
+State 71
+
+   12 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET . STATEMENT_LIST T_RCURLBRACKET
+
+    $default  reduce using rule 8 (STATEMENT_LIST)
+
+    STATEMENT_LIST  go to state 76
+
+
+State 72
+
+   19 ARGUMENT_LIST: ARGUMENT_LIST T_COMMA ARGUMENT .
+
+    $default  reduce using rule 19 (ARGUMENT_LIST)
+
+
+State 73
+
+   27 CONTROL: IF T_ELSE T_LBRACKET LOGIC T_RBRACKET . T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET
+
+    T_LCURLBRACKET  shift, and go to state 77
+
+
+State 74
+
+    9 STATEMENT_LIST: STATEMENT_LIST . STATEMENT
+   29 IF: T_IF T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST . T_RCURLBRACKET
+
+    T_RCURLBRACKET  shift, and go to state 78
+    T_INT           shift, and go to state 4
+    T_VOID          shift, and go to state 5
+    T_RETURN        shift, and go to state 6
+    T_IF            shift, and go to state 7
+    T_WHILE         shift, and go to state 8
+    T_NUMBER        shift, and go to state 9
+    T_VARIABLE      shift, and go to state 10
+
+    STATEMENT         go to state 79
+    DECLARATION       go to state 12
+    FUNC_DECLARATION  go to state 13
+    VAR_DECLARATION   go to state 14
+    ASSIGNMENT        go to state 15
+    ASSIGN            go to state 16
+    JUMP              go to state 17
+    RETURN            go to state 18
+    CONTROL           go to state 19
+    IF                go to state 20
+    VALUE             go to state 21
+
+
+State 75
+
+    9 STATEMENT_LIST: STATEMENT_LIST . STATEMENT
+   28 CONTROL: T_WHILE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST . T_RCURLBRACKET
+
+    T_RCURLBRACKET  shift, and go to state 80
+    T_INT           shift, and go to state 4
+    T_VOID          shift, and go to state 5
+    T_RETURN        shift, and go to state 6
+    T_IF            shift, and go to state 7
+    T_WHILE         shift, and go to state 8
+    T_NUMBER        shift, and go to state 9
+    T_VARIABLE      shift, and go to state 10
+
+    STATEMENT         go to state 79
+    DECLARATION       go to state 12
+    FUNC_DECLARATION  go to state 13
+    VAR_DECLARATION   go to state 14
+    ASSIGNMENT        go to state 15
+    ASSIGN            go to state 16
+    JUMP              go to state 17
+    RETURN            go to state 18
+    CONTROL           go to state 19
+    IF                go to state 20
+    VALUE             go to state 21
+
+
+State 76
+
+    9 STATEMENT_LIST: STATEMENT_LIST . STATEMENT
+   12 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST . T_RCURLBRACKET
+
+    T_RCURLBRACKET  shift, and go to state 81
+    T_INT           shift, and go to state 4
+    T_VOID          shift, and go to state 5
+    T_RETURN        shift, and go to state 6
+    T_IF            shift, and go to state 7
+    T_WHILE         shift, and go to state 8
+    T_NUMBER        shift, and go to state 9
+    T_VARIABLE      shift, and go to state 10
+
+    STATEMENT         go to state 79
+    DECLARATION       go to state 12
+    FUNC_DECLARATION  go to state 13
+    VAR_DECLARATION   go to state 14
+    ASSIGNMENT        go to state 15
+    ASSIGN            go to state 16
+    JUMP              go to state 17
+    RETURN            go to state 18
+    CONTROL           go to state 19
+    IF                go to state 20
+    VALUE             go to state 21
+
+
+State 77
+
+   27 CONTROL: IF T_ELSE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET . STATEMENT_LIST T_RCURLBRACKET
+
+    $default  reduce using rule 8 (STATEMENT_LIST)
+
+    STATEMENT_LIST  go to state 82
+
+
+State 78
+
+   29 IF: T_IF T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET .
+
+    $default  reduce using rule 29 (IF)
+
+
+State 79
+
+    9 STATEMENT_LIST: STATEMENT_LIST STATEMENT .
+
+    $default  reduce using rule 9 (STATEMENT_LIST)
+
+
+State 80
+
+   28 CONTROL: T_WHILE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET .
+
+    $default  reduce using rule 28 (CONTROL)
+
+
+State 81
+
+   12 FUNC_DECLARATION: VAR_DECLARATION T_LBRACKET ARGUMENT_LIST T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET .
+
+    $default  reduce using rule 12 (FUNC_DECLARATION)
+
+
+State 82
+
+    9 STATEMENT_LIST: STATEMENT_LIST . STATEMENT
+   27 CONTROL: IF T_ELSE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST . T_RCURLBRACKET
+
+    T_RCURLBRACKET  shift, and go to state 83
+    T_INT           shift, and go to state 4
+    T_VOID          shift, and go to state 5
+    T_RETURN        shift, and go to state 6
+    T_IF            shift, and go to state 7
+    T_WHILE         shift, and go to state 8
+    T_NUMBER        shift, and go to state 9
+    T_VARIABLE      shift, and go to state 10
+
+    STATEMENT         go to state 79
+    DECLARATION       go to state 12
+    FUNC_DECLARATION  go to state 13
+    VAR_DECLARATION   go to state 14
+    ASSIGNMENT        go to state 15
+    ASSIGN            go to state 16
+    JUMP              go to state 17
+    RETURN            go to state 18
+    CONTROL           go to state 19
+    IF                go to state 20
+    VALUE             go to state 21
+
+
+State 83
+
+   27 CONTROL: IF T_ELSE T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET .
+
+    $default  reduce using rule 27 (CONTROL)

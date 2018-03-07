@@ -2,20 +2,38 @@
 
 %{
 extern "C" int fileno(FILE *stream);
-
+int line;
 #include "c_parser.tab.hpp"
 %}
 
 %%
+
+"=="		{ return T_EQUAL;}
+"<"		{ return T_LESS; }
+"<="		{ return T_EQLT; }
+
+"&&"		{ return T_AND; }
+"||"		{ return T_OR; }
+
+[+]		{ return T_ADD; }
+[-]		{ return T_SUB; }
+[*]		{ return T_MULT; }
 
 [=]		{ return T_ASSIGN; }
 [;]		{ return T_SEMICOLON; }
 [:]		{ return T_COLON; }
 [,]		{ return T_COMMA; }
 
-int		{ return T_INT; }
 
-return	{return T_RETURN; }
+
+if		{ return T_IF; }
+else		{ return T_ELSE; }
+while		{ return T_WHILE; }
+
+int		{ return T_INT; }
+void		{ return T_VOID; }
+
+return		{ return T_RETURN; }
 
 [(]             { return T_LBRACKET; }
 [)]             { return T_RBRACKET; }
@@ -28,7 +46,7 @@ return	{return T_RETURN; }
 [-]?[0-9]+([.][0-9]*)? { yylval.number=strtod(yytext, 0); return T_NUMBER; }
 [a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_VARIABLE; }
 
-[ \t\r\n]+		{;}
+[ \t\r\n]+		{ line++;}
 
 .               { fprintf(stderr, "Invalid token\n"); exit(1); }
 %%
@@ -36,5 +54,6 @@ return	{return T_RETURN; }
 void yyerror (char const *s)
 {
   fprintf (stderr, "Parse error : %s\n", s);
+    std::cout << "Failed at: " <<  line << std::endl;
   exit(1);
 }

@@ -14,12 +14,12 @@ public:
         : id(_id)
     {}
 
-    const std::string getId() const
+    std::string getId() const override
     { return id; }
 
-    virtual void translate(std::ostream &dst, int &scope) const override
+    virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
     {
-        dst<<id;
+        dst << getId();
     }
 };
 
@@ -33,29 +33,13 @@ public:
         : value(_value)
     {}
 
-    double getValue() const
+    double getValue() const override
     { return value; }
 
-    virtual void translate(std::ostream &dst, int &scope) const override
+    virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
     {
         dst<<value;
     }
-};
-
-
-class DataType
-	: public Statement
-{
-public:
-	
-	std::string type;
-
-	DataType(): type(){}
-
-	virtual void translate(std::ostream &dst, int &scope) const override
-	{
-		dst<< type;
-	}
 };
 
 class empty
@@ -63,9 +47,9 @@ class empty
 {
 public:
 
-	empty() {}
+	empty(){}
 
-	virtual void translate(std::ostream &dst, int &scope) const override
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
 };
 
