@@ -1,10 +1,13 @@
 MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
-LexerLab,,2,,d9d084dfe761c32044fffd1c57b609b2bbdad789,Do lexer lab
-DefineInitialMilestones,             ,1,,d9d084dfe761c32044fffd1c57b609b2bbdad789, Come up with initial milestones for getting started
-CollectTokens,LexerLab,1,,9f5d81f5517f721f12c5450f839cc48fc91be32a,Collect all the C tokens and start thinking about how they work
-ParserLab,LexerLab,3,,9f5d81f5517f721f12c5450f839cc48fc91be32a,Learn how to parse
-LookatParser,ParserLab,2,,this,Think about parsing C
-Docode-genlab,,2,,this,Use the code-gen lab to feel out ideas for the compiler
-DecideASTstyle,,2,,,Decide on our AST style to guide our efforts
-WriteSimpleProgram,Decided AST style,8,,,Write a simple program that works
-AddSupportForMoreFeatures,Got anything working,8,,,Add further tokens and cases
+LexerLab,,2,EM,d9d084dfe761c32044fffd1c57b609b2bbdad789,Do lexer lab
+DefineInitialMilestones,             ,1,EM,d9d084dfe761c32044fffd1c57b609b2bbdad789, Come up with initial milestones for getting started
+CollectTokens,LexerLab,1,EM,9f5d81f5517f721f12c5450f839cc48fc91be32a,Collect all the C tokens and start thinking about how they work
+ParserLab,LexerLab,3,EM,9f5d81f5517f721f12c5450f839cc48fc91be32a,Learn how to parse
+LookatParser,ParserLab,2,EM,this,Think about parsing C
+Docode-genlab,,2,EM,this,Use the code-gen lab to feel out ideas for the compiler
+DecideASTstyle,,2,EM,,Decide on our AST style to guide our efforts
+WriteSimpleProgram,Decided AST style,8,EM,e33b2c16e16c9580ed84a4545329557fd1bc3fff,Write a simple program that works
+AddSupportForMoreFeatures,WriteSimpleProgram,8,EM,7787f9991c91d11cb46e9559397c734428b522da,Add further tokens and cases
+FinishTranslator,AddSuportForMoreFeatures,12,EM,1221a95f43099c98dde29ebcbde7f22f07c32cf1,Completed Translator
+CodeGenSimple,,10,EM,,Code gen a simple main
+AddMoreThings,CodeGenSimple,,,,
