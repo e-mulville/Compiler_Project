@@ -28,6 +28,15 @@ public:
 		}
 	}
 
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		scope_bindings.insert( std::make_pair( getId(), scope ) );
+        	identifier->translate(dst, scope, scope_bindings);
+		if (assigned == 0){
+			dst << "=0" << std::endl;	
+		}
+	}
+
 	std::string getId() const override{
 		return identifier->getId();
 	}
@@ -54,6 +63,26 @@ public:
 	
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst<<"def ";
+		scope++;
+		var_dec->translate(dst, scope, scope_bindings);
+		dst<<"(";
+		arg_list->translate(dst, scope, scope_bindings);
+		dst << "):" << std::endl;
+		for (const auto& element : scope_bindings){
+   			if (element.second == 0){
+				for(int x = 0; x < scope; x++){
+					dst << "    ";
+				}
+        			dst << "global " << element.first << std::endl;
+			}
+		}
+		statement_list->translate(dst, scope, scope_bindings);
+		scope--;
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		dst<<"def ";
 		scope++;

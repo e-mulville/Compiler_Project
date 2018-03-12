@@ -45,6 +45,16 @@ public:
 		body->translate(dst, scope, scope_bindings);
 		scope--;
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << "if(";
+		condition->translate(dst, scope, scope_bindings);
+		dst << "):" << std::endl;
+		scope++;
+		body->translate(dst, scope, scope_bindings);
+		scope--;
+	}
 	
 };
 
@@ -60,6 +70,21 @@ public:
 	, body(_body) {}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		_if->translate(dst, scope, scope_bindings);
+		for(int x = 0; x < scope; x++){
+			dst << "	";
+		}
+		dst << "else:" << std::endl;		
+		scope++;
+		for(int x = 0; x < scope; x++){
+			dst << "	";
+		}
+		body->translate(dst, scope, scope_bindings);
+		scope--;
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		_if->translate(dst, scope, scope_bindings);
 		for(int x = 0; x < scope; x++){
@@ -99,6 +124,21 @@ public:
 		body->translate(dst, scope, scope_bindings);
 		scope--;
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << "while (";
+		condition->translate(dst, scope, scope_bindings);
+		dst << "):" << std::endl;	
+		scope++;
+		for(int x = 0; x < scope; x++){
+			dst << "	";
+		}
+		body->translate(dst, scope, scope_bindings);
+		scope--;
+	}
+
+	
 	
 };
 

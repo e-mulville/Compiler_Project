@@ -21,6 +21,9 @@ public:
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
 
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{}
+
 	std::string getId() const override{
 		return left->getId();
 	}
@@ -47,6 +50,14 @@ public:
 		dst << "==";
 		right->translate(dst, scope, scope_bindings);
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		
+		left->translate(dst, scope, scope_bindings);
+		dst << "==";
+		right->translate(dst, scope, scope_bindings);
+	}
 	
 };
 
@@ -60,6 +71,14 @@ public:
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		
+		left->translate(dst, scope, scope_bindings);
+		dst << "!=";
+		right->translate(dst, scope, scope_bindings);
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		
 		left->translate(dst, scope, scope_bindings);
@@ -85,6 +104,14 @@ public:
 		dst << ">";
 		right->translate(dst, scope, scope_bindings);
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		
+		left->translate(dst, scope, scope_bindings);
+		dst << ">";
+		right->translate(dst, scope, scope_bindings);
+	}
 	
 };
 
@@ -98,6 +125,14 @@ public:
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		
+		left->translate(dst, scope, scope_bindings);
+		dst << ">=";
+		right->translate(dst, scope, scope_bindings);
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		
 		left->translate(dst, scope, scope_bindings);
@@ -124,6 +159,13 @@ public:
 		right->translate(dst, scope, scope_bindings);
 	}
 	
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		
+		left->translate(dst, scope, scope_bindings);
+		dst << "<";
+		right->translate(dst, scope, scope_bindings);
+	}
 };
 
 class LessThanOrEqual
@@ -142,6 +184,15 @@ public:
 		dst << "<=";
 		right->translate(dst, scope, scope_bindings);
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		
+		left->translate(dst, scope, scope_bindings);
+		dst << "<=";
+		right->translate(dst, scope, scope_bindings);
+	}
+	
 	
 };
 
@@ -160,6 +211,13 @@ public:
 		dst << "&&";
 		right->translate(dst, scope, scope_bindings);
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		left->translate(dst, scope, scope_bindings);
+		dst << "&&";
+		right->translate(dst, scope, scope_bindings);
+	}
 	
 };
 
@@ -173,6 +231,14 @@ public:
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		
+		left->translate(dst, scope, scope_bindings);
+		dst << "||";
+		right->translate(dst, scope, scope_bindings);
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		
 		left->translate(dst, scope, scope_bindings);

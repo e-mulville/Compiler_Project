@@ -58,6 +58,20 @@ public:
 			
 		} 
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		this_statement->translate(dst, scope, scope_bindings);
+		if (next != NULL)
+		{	
+			for(int x = 0; x < scope; x++){
+				dst << "    ";
+			}
+			next->translate(dst, scope, scope_bindings);
+
+			
+		} 
+	}
 };
 
 class ArgumentPair
@@ -82,6 +96,17 @@ public:
 			next->translate(dst, scope, scope_bindings);
 		}
 	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		this_statement->translate(dst, scope, scope_bindings);
+		if (next != NULL)
+		{
+			dst << ",";
+			next->translate(dst, scope, scope_bindings);
+		}
+	}
+
 };
 
 class ProgramPair
@@ -98,6 +123,16 @@ public:
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		this_statement->translate(dst, scope, scope_bindings);
+		if (next != NULL)
+		{
+			next->translate(dst, scope, scope_bindings);
+			dst << std::endl;
+		}
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		this_statement->translate(dst, scope, scope_bindings);
 		if (next != NULL)

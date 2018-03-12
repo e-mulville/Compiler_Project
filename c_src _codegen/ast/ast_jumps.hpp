@@ -11,6 +11,9 @@ public:
 	
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{}
 };
 
 class Return
@@ -23,6 +26,13 @@ public:
 	: value(_value) {}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << "return ";
+		value->translate(dst, scope, scope_bindings);
+		dst << std::endl;
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		dst << "return ";
 		value->translate(dst, scope, scope_bindings);
