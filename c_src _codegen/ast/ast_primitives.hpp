@@ -5,41 +5,53 @@
 #include <iostream>
 
 class Variable
-    : public Statement
+	: public Statement
 {
 private:
-    std::string id;
+	std::string id;
 public:
-    Variable(const std::string &_id)
-        : id(_id)
-    {}
+	Variable(const std::string &_id)
+		: id(_id)
+	{}
 
-    std::string getId() const override
-    { return id; }
+	std::string getId() const override
+	{ return id; }
 
-    virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
-    {
-        dst << getId();
-    }
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << getId();
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << getId();
+	}
+
+
 };
 
 class Number
-    : public Statement
+	: public Statement
 {
 private:
-    double value;
+	double value;
 public:
-    Number(double _value)
-        : value(_value)
-    {}
+	Number(double _value)
+		: value(_value)
+	{}
 
-    double getValue() const override
-    { return value; }
+	double getValue() const override
+	{ return value; }
 
-    virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
-    {
-        dst<<value;
-    }
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst<<value;
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst<<value;
+	}
 };
 
 class FunctionEvocation
@@ -61,6 +73,14 @@ public:
 		arg_list->translate(dst, scope, scope_bindings);
 		dst << ")";
 	}
+
+	virtual void compile (std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		identifier->translate(dst, scope, scope_bindings);
+		dst << "(";
+		arg_list->translate(dst, scope, scope_bindings);
+		dst << ")";
+	}
 	
 };
 
@@ -72,6 +92,9 @@ public:
 	empty(){}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{}
+
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
 };
 

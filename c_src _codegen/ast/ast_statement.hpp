@@ -24,6 +24,8 @@ public:
 	//! Tell and Statement to translate to stream
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const =0;
 
+	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const =0;
+
 	virtual std::string getId() const { return "error";}
 	virtual double getValue() const { return 99999;}
 	//! Evaluate the tree using the given mapping of variables to numbers
