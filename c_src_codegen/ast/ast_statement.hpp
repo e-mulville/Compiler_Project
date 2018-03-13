@@ -4,11 +4,12 @@
 #include <string>
 #include <iostream>
 #include <map>
-
+#include <vector>
 #include <memory>
 
 class Statement;
 
+static int var_number;
 
 
 typedef const Statement *StatementPtr;
@@ -19,24 +20,27 @@ public:
 	virtual ~Statement(){}	
 
 	int scope;
+	std::string context;
 
 	struct meta_data 
 	{
+		std::string Id;
+		std::string context;
 		int var_scope;
 		int stack_address;
-	}
+	};
 
 
 	//! Tell and Statement to translate to stream
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const =0;
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const =0;
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const =0;
 
 	virtual std::string getId() const { return "error";}
 	virtual double getValue() const { return 99999;}
 	//! Evaluate the tree using the given mapping of variables to numbers
 	
-	std::string makeName(std::string name, int scope){
+	virtual std::string makeName(std::string name, int scope) const{
 		name += "_" + scope;
 		return name;
 	}
@@ -71,13 +75,9 @@ public:
 		} 
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
-		this_statement->compile(dst, scope, scope_bindings);
-		if (next != NULL)
-		{	
-			next->compile(dst, scope, scope_bindings);	
-		} 
+
 	}
 };
 
@@ -104,14 +104,9 @@ public:
 		}
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
-		this_statement->translate(dst, scope, scope_bindings);
-		if (next != NULL)
-		{
-			dst << ",";
-			next->translate(dst, scope, scope_bindings);
-		}
+
 	}
 
 };
@@ -139,12 +134,12 @@ public:
 		}
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
-		this_statement->compile(dst, scope, scope_bindings);
+		this_statement->compile(dst, scope, context, bindings);
 		if (next != NULL)
 		{
-			next->compile(dst, scope, scope_bindings);
+			next->compile(dst, scope, context, bindings);
 			dst << std::endl;
 		}
 	}

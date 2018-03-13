@@ -21,7 +21,7 @@ public:
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{}
 
 	std::string getId() const override{
@@ -46,18 +46,18 @@ public:
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		
-		left->compile(dst, scope, scope_bindings);
-		dst << "mov $3 $2"
-		right->translate(dst, scope, scope_bindings);
-		dst << "add $2 $2 $3"
-	}
-
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
-	{
-		
 		left->translate(dst, scope, scope_bindings);
 		dst << "+";
 		right->translate(dst, scope, scope_bindings);
+	}
+
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	{
+		
+		//left->compile(dst, scope, scope_bindings);
+		dst << "mov $3 $2" << std::endl;
+		//right->compile(dst, scope, scope_bindings);
+		dst << "add $2 $2 $3" << std::endl;
 	}
 	
 };
@@ -79,13 +79,9 @@ public:
 		right->translate(dst, scope, scope_bindings);
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
 		
-		left->compile(dst, scope, scope_bindings);
-		dst << "mov $3 $2"
-		right->translate(dst, scope, scope_bindings);
-		dst << "sub $2 $2 $3"
 	}
 	
 };
@@ -107,12 +103,9 @@ public:
 		right->translate(dst, scope, scope_bindings);
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
 		
-		left->translate(dst, scope, scope_bindings);
-		dst << "*";
-		right->translate(dst, scope, scope_bindings);
 	}
 	
 };
@@ -134,12 +127,10 @@ public:
 		right->translate(dst, scope, scope_bindings);
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
 		
-		left->translate(dst, scope, scope_bindings);
-		dst << "/";
-		right->translate(dst, scope, scope_bindings);
+
 	}
 	
 };
@@ -161,12 +152,10 @@ public:
 		right->translate(dst, scope, scope_bindings);
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
 		
-		left->translate(dst, scope, scope_bindings);
-		dst << "%";
-		right->translate(dst, scope, scope_bindings);
+
 	}
 	
 };
@@ -189,11 +178,9 @@ public:
 		dst << ")";
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
-		dst << "(";
-		expr->translate(dst, scope, scope_bindings);
-		dst << ")";
+
 	}
 	
 	

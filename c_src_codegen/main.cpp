@@ -1,6 +1,7 @@
 #include "ast.hpp"
 
 #include <iomanip>
+#include <vector>
 
 
 int yyparse();
@@ -9,7 +10,17 @@ extern FILE * yyin;
 int main(int argc, char **argv)
 {	
 	int scope = 0;
+	std::string context;
 	
+	struct meta_data 
+	{
+		std::string Id;
+		int context;
+		int var_scope;
+		int stack_address;
+	};
+
+	std::vector<meta_data> bindings;
 
 	std::map<std::string,double> scope_bindings;	
 	

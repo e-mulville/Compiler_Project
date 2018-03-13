@@ -22,7 +22,7 @@ public:
 		dst << getId();
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
 		dst << getId();
 	}
@@ -48,7 +48,7 @@ public:
 		dst<<value;
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{
 		dst<<value;
 	}
@@ -74,12 +74,9 @@ public:
 		dst << ")";
 	}
 
-	virtual void compile (std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
-	{
-		identifier->translate(dst, scope, scope_bindings);
-		dst << "(";
-		arg_list->translate(dst, scope, scope_bindings);
-		dst << ")";
+	virtual void compile (std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	{ 
+
 	}
 	
 };
@@ -94,7 +91,7 @@ public:
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
 
-	virtual void compile(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
 	{}
 };
 

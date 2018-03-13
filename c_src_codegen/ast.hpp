@@ -16,4 +16,5 @@ extern const Statement *parseAST();
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #endif

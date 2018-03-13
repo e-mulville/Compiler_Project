@@ -1,6 +1,7 @@
 int function(int a, int b)
 {
     if(a<b){
+	int a;
         a=a-1;
         if(a>b){
             b=b+3;
