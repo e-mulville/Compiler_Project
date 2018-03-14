@@ -9,22 +9,44 @@ class Variable
 {
 private:
 	std::string id;
+	bool store;
 public:
-	Variable(const std::string &_id)
+	Variable(const std::string &_id, bool _store)
 		: id(_id)
+		, store(_store) 
 	{}
 
 	std::string getId() const override
 	{ return id; }
+	
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		dst << getId();
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		dst << getId();
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			if ((bindings[x].Id == id) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
+				if (store == 1){
+					dst << "sw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+				}
+				else if(store == 0){
+					dst << "lw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+				}
+			}
+			else if ((bindings[x].Id == id) && (bindings[x].context == "global")){
+				if (store == 1){
+					dst << "sw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+				}
+				else if(store == 0){
+					dst << "lw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+				}
+			}
+		}
+		
+		
 	}
 
 
@@ -48,9 +70,9 @@ public:
 		dst<<value;
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		dst<<value;
+		dst<< "li	$2," << value << std::endl;	
 	}
 };
 
@@ -74,7 +96,7 @@ public:
 		dst << ")";
 	}
 
-	virtual void compile (std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile (std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{ 
 
 	}
@@ -91,7 +113,7 @@ public:
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{}
 };
 

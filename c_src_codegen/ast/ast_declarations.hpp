@@ -31,7 +31,7 @@ public:
 		}
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
 
 	}
@@ -58,7 +58,7 @@ public:
 	: var_dec(_var_dec)
 	, arg_list(_arg_list)
 	, statement_list(_statement_list)
-	{num = var_number; std::cout << var_number; var_number = 0; }
+	{num = var_number; var_number = 0; }
 
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
@@ -81,24 +81,29 @@ public:
 		scope--;
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		int stack_move = num*4;
-		context = var_dec->getId();
-		dst << context << ":" << std::endl;
-		arg_list->compile(dst, scope, context, bindings); //will do linking/map stuff copying but changing context to current context
+		int stack_move = (num+4)*4;
+		program_data.context = var_dec->getId();
+		program_data.stack_counter = 0;
+		dst << program_data.context << ":" << std::endl;
 		dst << "addiu	$sp,$sp,-" << stack_move << std::endl;
 		dst << "sw	$fp," << stack_move-4 << "($sp)" << std::endl;
-		 
-		
+		dst << "sw	$31," << stack_move-8 << "($sp)" << std::endl;
+		dst << "move	$fp,$sp" << std::endl;
+		program_data.stack_counter = stack_move; //so i can put above the stack
+		arg_list->compile(dst, program_data, bindings); //will do save the first 4 arg in the space above the stack allocated.
+		program_data.stack_counter = 8; //so i can allocate in the stack 
 		//moving number to pass through the declarations and use in bindings - use meta_data?
-		statement_list->compile(dst, scope, context, bindings); 
+		statement_list->compile(dst, program_data, bindings); 
 
-		dst << "sw	$fp," << stack_move-4 << "($sp)" << std::endl;
+		dst << "move	$fp,$sp" << std::endl;
+		dst << "lw	$31," << stack_move-8 << "($sp)" << std::endl;
+		dst << "lw	$fp," << stack_move-4 << "($sp)" << std::endl;
 		dst << "addiu	$sp,$sp," << stack_move << std::endl;
 		dst << "j $31" << std::endl;
 		dst << "nop" << std::endl;
-		context = "global";
+		program_data.context = "global";
 		
 	}
 };
@@ -112,20 +117,27 @@ public:
 	IntDeclaration(StatementPtr _identifier, bool _assigned)
 	: Declaration("", _identifier, _assigned) {var_number++;}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		meta_data data;
-		meta_data data_last = bindings.back();
-		data.Id = getId();
-		data.context = context;
-		data.var_scope = scope;
-		if(bindings.size() != 0){
-			data.stack_address = (data_last.stack_address+4);
+		if (assigned == 0){
+			var_data data;
+			data.Id = getId();
+			data.context = program_data.context;
+			data.var_scope = program_data.scope;
+			data.stack_address = program_data.stack_counter;
+			bindings.push_back(data);
+			program_data.stack_counter += 4;
 		}
-		else {
-			data.stack_address = 0;
+		else if (assigned == 1){
+			var_data data;
+			data.Id = getId();
+			data.context = program_data.context;
+			data.var_scope = program_data.scope;
+			data.stack_address = program_data.stack_counter;
+			program_data.stack_counter += 4;
+			bindings.push_back(data);
+			identifier->compile(dst, program_data, bindings);
 		}
-		
 	}
 
 };

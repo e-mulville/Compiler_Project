@@ -19,10 +19,7 @@ class Statement
 public:
 	virtual ~Statement(){}	
 
-	int scope;
-	std::string context;
-
-	struct meta_data 
+	struct var_data
 	{
 		std::string Id;
 		std::string context;
@@ -30,11 +27,20 @@ public:
 		int stack_address;
 	};
 
+	struct meta_data 
+	{
+		int scope;
+		std::string context;
+		int stack_counter;
+	};
+
+
+	
 
 	//! Tell and Statement to translate to stream
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const =0;
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const =0;
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const =0;
 
 	virtual std::string getId() const { return "error";}
 	virtual double getValue() const { return 99999;}
@@ -75,9 +81,13 @@ public:
 		} 
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-
+	this_statement->compile(dst, program_data, bindings);
+		if (next != NULL)
+		{
+			next->compile(dst, program_data, bindings);
+		}
 	}
 };
 
@@ -104,7 +114,7 @@ public:
 		}
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
 
 	}
@@ -134,13 +144,12 @@ public:
 		}
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		this_statement->compile(dst, scope, context, bindings);
+		this_statement->compile(dst, program_data, bindings);
 		if (next != NULL)
 		{
-			next->compile(dst, scope, context, bindings);
-			dst << std::endl;
+			next->compile(dst, program_data, bindings);
 		}
 	}
 };

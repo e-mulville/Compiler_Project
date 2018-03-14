@@ -21,7 +21,7 @@ public:
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{}
 
 	std::string getId() const override{
@@ -52,9 +52,10 @@ public:
 		dst << std::endl;
 	}
 
-	virtual void compile(std::ostream &dst, int &scope, std::string &context, std::vector<meta_data> &bindings) const override
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-
+		right->compile(dst, program_data, bindings);		
+		left->compile(dst, program_data, bindings);		
 	}
 	
 };
