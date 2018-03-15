@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+
+
 class Jump
 	: public Statement
 {
@@ -35,6 +37,12 @@ public:
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{		
 		value->compile(dst, program_data, bindings);
+		dst << "move	$fp,$sp" << std::endl;
+		dst << "lw	$31," << program_data.stack_size-8 << "($sp)" << std::endl;
+		dst << "lw	$fp," << program_data.stack_size-4 << "($sp)" << std::endl;
+		dst << "addiu	$sp,$sp," << program_data.stack_size << std::endl;
+		dst << "j $31" << std::endl;
+		dst << "nop" << std::endl;
 	}
 	
 };

@@ -10,6 +10,7 @@
 class Statement;
 
 static int var_number;
+static int name_counter = 0;
 
 
 typedef const Statement *StatementPtr;
@@ -32,6 +33,7 @@ public:
 		int scope;
 		std::string context;
 		int stack_counter;
+		int stack_size;
 	};
 
 
@@ -46,9 +48,21 @@ public:
 	virtual double getValue() const { return 99999;}
 	//! Evaluate the tree using the given mapping of variables to numbers
 	
-	virtual std::string makeName(std::string name, int scope) const{
-		name += "_" + scope;
+	/*virtual std::string makeName(std::string name) const {
+		name += "_";
+		name += name_counter;
+		name_counter++;
 		return name;
+	} weird bug */
+		
+	
+	
+	virtual std::string makeName(std::string name) const {
+		std::string temp = name;
+		temp += "_"; 
+		temp += std::to_string(name_counter);
+		name_counter++;
+		return temp;
 	}
 		
 };

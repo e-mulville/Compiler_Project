@@ -91,6 +91,7 @@ public:
 		dst << "sw	$fp," << stack_move-4 << "($sp)" << std::endl;
 		dst << "sw	$31," << stack_move-8 << "($sp)" << std::endl;
 		dst << "move	$fp,$sp" << std::endl;
+		program_data.stack_size = stack_move;
 		program_data.stack_counter = stack_move; //so i can put above the stack
 		arg_list->compile(dst, program_data, bindings); //will do save the first 4 arg in the space above the stack allocated.
 		program_data.stack_counter = 8; //so i can allocate in the stack 
@@ -101,7 +102,7 @@ public:
 		dst << "lw	$31," << stack_move-8 << "($sp)" << std::endl;
 		dst << "lw	$fp," << stack_move-4 << "($sp)" << std::endl;
 		dst << "addiu	$sp,$sp," << stack_move << std::endl;
-		dst << "j $31" << std::endl;
+		dst << "j	$31" << std::endl;
 		dst << "nop" << std::endl;
 		program_data.context = "global";
 		

@@ -54,10 +54,10 @@ public:
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
 		
-		//left->compile(dst, scope, scope_bindings);
-		dst << "mov $3 $2" << std::endl;
-		//right->compile(dst, scope, scope_bindings);
-		dst << "add $2 $2 $3" << std::endl;
+		right->compile(dst, program_data, bindings);
+		dst << "mov	$3, $2" << std::endl;
+		left->compile(dst, program_data, bindings);
+		dst << "addu	$2, $2, $3" << std::endl;
 	}
 	
 };

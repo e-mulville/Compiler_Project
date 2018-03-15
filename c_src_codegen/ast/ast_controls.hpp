@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+extern int name_counter;
+
 class Control
 	: public Statement
 {
@@ -14,6 +16,9 @@ public:
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
+	
+	
+	
 
 	/*std::string getId() const override{
 		return left->getId();
@@ -48,7 +53,13 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-
+		condition->compile(dst, program_data, bindings);
+		std::string if_label = makeName("if_end");
+		
+		dst << "beq	$2, $0, " << if_label << std::endl;
+		dst << "nop" << std::endl;
+		body->compile(dst, program_data, bindings);
+		dst << if_label << ":" << std::endl;
 	}
 	
 };
@@ -57,16 +68,23 @@ class IfElse
 	: public Control
 {
 public:
-	StatementPtr _if;
-	StatementPtr body;
+	StatementPtr if_condition;
+	StatementPtr if_body;
+	StatementPtr else_body;
 
-	IfElse(StatementPtr __if, StatementPtr _body) :
-	_if(__if)	
-	, body(_body) {}
+	IfElse(StatementPtr _if_condition, StatementPtr _if_body, StatementPtr _else_body) :
+	if_condition(_if_condition)
+	, if_body(_if_body)	
+	, else_body(_else_body) {}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		_if->translate(dst, scope, scope_bindings);
+		dst << "if(";
+		if_condition->translate(dst, scope, scope_bindings);
+		dst << "):" << std::endl;
+		scope++;
+		if_body->translate(dst, scope, scope_bindings);
+		scope--;
 		for(int x = 0; x < scope; x++){
 			dst << "	";
 		}
@@ -75,13 +93,25 @@ public:
 		for(int x = 0; x < scope; x++){
 			dst << "	";
 		}
-		body->translate(dst, scope, scope_bindings);
+		else_body->translate(dst, scope, scope_bindings);
 		scope--;
 	}
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-
+		if_condition->compile(dst, program_data, bindings);
+		std::string if_label = makeName("if_end");
+		std::string else_label = makeName("else_end");
+		
+		dst << "beq	$2, $0, " << if_label << std::endl;
+		dst << "nop" << std::endl;
+		if_body->compile(dst, program_data, bindings);
+		dst << "beq	$0, $0, " << else_label << std::endl;
+		dst << "nop" << std::endl;
+		dst << if_label << ":" << std::endl;
+		
+		else_body->compile(dst, program_data, bindings);
+		dst << else_label << ":" << std::endl;
 	}
 	
 };
