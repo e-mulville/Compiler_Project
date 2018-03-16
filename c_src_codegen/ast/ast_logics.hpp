@@ -53,7 +53,55 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
+		int x = 8;
+		std::string not_label = makeName("not_start");
+		std::string end_label = makeName("not_end");
+
+		right->compile(dst, program_data, bindings);
+
+		while (program_data.used_registers[x] == 1) { x++; }
 		
+		if (x <= 25){
+			program_data.used_registers[x] = 1;
+
+			dst << "move	$" << x;
+			dst<< ", $2" << std::endl;
+
+			left->compile(dst, program_data, bindings);
+
+
+		
+			dst << "bne	$2, $" << x << ", " << not_label << std::endl;;
+			dst << "nop" << std::endl;
+			dst << "li $2, 1" << std::endl;
+			dst << "beq	$0, $0, " << end_label << std::endl;
+			dst << "nop" << std::endl;
+			dst << not_label << ":" << std::endl;
+			dst << "move $2, $0" << std::endl;
+			dst << end_label << ":" << std::endl;			
+
+			program_data.used_registers[x] = 0;
+		}
+		else {
+			program_data.stack_size += 4;
+			int current_stack = program_data.stack_size;
+			dst << "addu	$sp, $sp, -4" << std::endl;			
+			dst << "sw	$2, 8($sp)" << std::endl;
+			left->compile(dst, program_data, bindings);
+			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
+			dst << "addu	$sp, $sp, 4" << std::endl;
+			program_data.stack_size -= 4;
+
+			dst << "bne	$2, $3, " << not_label << std::endl;;
+			dst << "nop" << std::endl;
+			dst << "li $2, 1" << std::endl;
+			dst << "beq	$0, $0, " << end_label << std::endl;
+			dst << "nop" << std::endl;
+			dst << not_label << ":" << std::endl;
+			dst << "move $2, $0" << std::endl;
+			dst << end_label << ":" << std::endl;
+			dst << "addu	$2, $2, $3" << std::endl;
+		}
 
 	}
 	
