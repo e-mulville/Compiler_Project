@@ -273,7 +273,7 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-
+		expr->compile(dst, program_data, bindings);
 	}
 	
 	

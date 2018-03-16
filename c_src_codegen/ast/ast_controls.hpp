@@ -142,7 +142,19 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
+		condition->compile(dst, program_data, bindings);
+		std::string start_label = makeName("while_start");
+		std::string end_label = makeName("while_end");
+		
 
+		dst << start_label << ":" << std::endl;
+		condition->compile(dst, program_data, bindings);
+		dst << "beq	$2, $0, " << end_label << std::endl;
+		dst << "nop" << std::endl;
+		body->compile(dst, program_data, bindings);
+		dst << "beq	$0, $0, " << start_label << std::endl;
+		dst << end_label << ":" << std::endl;
+		
 	}
 
 	
