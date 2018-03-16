@@ -86,12 +86,14 @@ public:
 		int stack_move = (num+4)*4;
 		program_data.context = var_dec->getId();
 		program_data.stack_counter = 0;
+		program_data.stack_size = stack_move;
+
 		dst << program_data.context << ":" << std::endl;
 		dst << "addiu	$sp,$sp,-" << stack_move << std::endl;
 		dst << "sw	$fp," << stack_move-4 << "($sp)" << std::endl;
 		dst << "sw	$31," << stack_move-8 << "($sp)" << std::endl;
 		dst << "move	$fp,$sp" << std::endl;
-		program_data.stack_size = stack_move;
+	
 		program_data.stack_counter = stack_move; //so i can put above the stack
 		arg_list->compile(dst, program_data, bindings); //will do save the first 4 arg in the space above the stack allocated.
 		program_data.stack_counter = 8; //so i can allocate in the stack 

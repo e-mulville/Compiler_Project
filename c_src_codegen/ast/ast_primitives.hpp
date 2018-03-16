@@ -30,18 +30,18 @@ public:
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			if ((bindings[x].Id == id) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
 				if (store == 1){
-					dst << "sw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
 				}
 				else if(store == 0){
-					dst << "lw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
 				}
 			}
 			else if ((bindings[x].Id == id) && (bindings[x].context == "global")){
 				if (store == 1){
-					dst << "sw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
 				}
 				else if(store == 0){
-					dst << "lw	$2," << bindings[x].stack_address << "($fp)" << std::endl;
+					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
 				}
 			}
 		}
@@ -72,7 +72,7 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		dst<< "li	$2," << value << std::endl;	
+		dst<< "li	$2, " << value << std::endl;	
 	}
 };
 
@@ -98,7 +98,8 @@ public:
 
 	virtual void compile (std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{ 
-
+		//save and restore program data
+		//and the registers apart from 2 and 3
 	}
 	
 };

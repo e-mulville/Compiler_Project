@@ -1,6 +1,8 @@
 #ifndef ast_statement_hpp
 #define ast_statement_hpp
 
+
+#include "includes.hpp"
 #include <string>
 #include <iostream>
 #include <map>
@@ -34,6 +36,8 @@ public:
 		std::string context;
 		int stack_counter;
 		int stack_size;
+		bool used_registers[32] {0};
+		
 	};
 
 
