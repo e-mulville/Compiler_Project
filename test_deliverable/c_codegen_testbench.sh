@@ -20,7 +20,6 @@ mkdir -p ${working}
 
 if [[ ${have_compiler} -eq 0 ]] ; then
     for i in ${driver_dir}/*.c ; do
-        base=$(echo $i | sed -E -e "s|${driver_dir}/([^.]+)[.]c|\1|g");
     
         # Compile the reference C version
         mips-linux-gnu-gcc $i -c 
@@ -30,7 +29,7 @@ if [[ ${have_compiler} -eq 0 ]] ; then
         base=$(echo $i | sed -E -e "s|${input_dir}/([^.]+)[.]c|\1|g");
 
         # Compile using our compiler
-        $compiler -S ${working}/$base -o ${working}/$base
+        $compiler -S $i -o ${working}/$base.s
     done
 
     mv *.o tmp
