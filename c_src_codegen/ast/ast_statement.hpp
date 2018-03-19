@@ -116,10 +116,12 @@ public:
 
 	StatementPtr this_statement;
 	StatementPtr next = NULL;
+	std::string type;
 
-	ArgumentPair(StatementPtr _this_statement, StatementPtr _next) :
+	ArgumentPair(StatementPtr _this_statement, StatementPtr _next, std::string _type) :
 		this_statement(_this_statement)
-		,next(_next)
+		, next(_next)
+		, type(_type)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
@@ -134,7 +136,39 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
+		if (type == "dec"){
+			this_statement->compile(dst, program_data, bindings); //aaaaaaaaaaaaaaaaaaa
+			
+			int x = 4;
+			while (program_data.used_registers[x] == 1) { x++; }
 
+			if (x < 8){
+				dst << "sw	$" << x << ", " << program_data.stack_counter;
+				program_data.stack_counter += 4; 
+			}
+		}
+		else if (type == "call"){
+			this_statement->compile(dst, program_data, bindings);
+		
+			int x = 4;
+			while (program_data.used_registers[x] == 1) { x++; }
+
+			if (x < 8){
+				dst << "move $" << x << ", $2"; //redeclare them with program data ---------------------------------------------------------------
+				var_data data;
+				data.Id = this_statement->getId();
+				data.context = program_data.context; //need the new context
+				data.var_scope = 0;
+				data.stack_address = program_data.stack_counter; //will this work?
+				bindings.push_back(data);
+				program_data.stack_counter += 4;
+			}
+			
+		}
+		if (next != NULL)
+		{
+			next->compile(dst, program_data, bindings);
+		}
 	}
 
 };

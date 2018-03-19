@@ -98,8 +98,33 @@ public:
 
 	virtual void compile (std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{ 
+		meta_data saved_context = program_data;
+		std::string function_name = identifier->getId();
+		program_data.context = function_name;
+		program_data.scope = 0;
+		program_data.stack_counter = 0;
+		program_data.stack_size = 0;
+		
+		dst << "addiu	$sp,$sp,-76" << std::endl;
+		int y = 1;
+		for (int x = 8; x < 26; x++){
+			dst << "sw	$" << x << ", " << y*4 << "($sp)" << std::endl;
+			y++;
+		}
+
 		//save and restore program data
 		//and the registers apart from 2 and 3
+		dst << 	"lw	$2, %got(" << function_name << ")($28)" << std::endl;
+		dst << "jalr	$2" << std::endl;
+
+		y = 18;
+		for (int x = 25; x > 7; x--){
+			dst << "lw	$" << x << ", " << y*4 << "($sp)" << std::endl;
+			y--;
+		}
+		dst << "addiu	$sp,$sp, 76" << std::endl;
+
+		program_data = saved_context;
 	}
 	
 };
