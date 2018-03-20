@@ -17,13 +17,11 @@ if [[ ${have_compiler} -eq 0 ]] ; then
     mkdir -p tmp
 
     # Compile the reference C version
-    for i in ${input}/driver/*.c ; do
+    for i in ${input}/*.c ; do
         mips-linux-gnu-gcc $i -c 
-    done
     mv *.o tmp
 
     # Compile using our compiler
-    for i in ${input}/*.c ; do
         base=$(echo $i | sed -E -e "s|${input}/([^.]+)[.]c|\1|g");
         $compiler -S $i -o tmp/$base.s
     done
@@ -34,20 +32,24 @@ if [[ ${have_compiler} -eq 0 ]] ; then
     passed=0
     for i in *.s ; do
         tot=$((tot+1))
-        # Link the generated assembly and the driver
-        # object into a MIPS executable
         base=$(echo $i | sed -E -e "s|([^.]+)[.]s|\1|g");
-        mips-linux-gnu-gcc -static $base'_driver.o' $i -o $base
+        if [[ -s $i ]] ; then
+            # Link the generated assembly and the driver
+            # object into a MIPS executable
+            mips-linux-gnu-gcc -static $base'.o' $i -o $base
 
-        # Run the executable under QEMU
-        qemu-mips $base
-        
-        # Check the result
-	    result=$(echo $?)
-	    if [[ $result -eq 0 ]]
-	    then
-	        echo "Test "$base" passed."
-	        passed=$((passed+1))
+            # Run the executable under QEMU
+            qemu-mips $base
+            
+            # Check the result
+	        result=$(echo $?)
+	        if [[ $result -eq 0 ]]
+	        then
+	            echo "Test "$base" passed."
+	            passed=$((passed+1))
+	        else
+	            echo "Test "$base" failed."
+	        fi
 	    else
 	        echo "Test "$base" failed."
 	    fi
