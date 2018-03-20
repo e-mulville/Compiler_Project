@@ -116,8 +116,7 @@ public:
 		arg_list->compile(dst, program_data, bindings);
 		//save and restore program data
 		//and the registers apart from 2 and 3
-		dst << "lw	$2, %got(" << function_name << ")($28)" << std::endl;
-		dst << "jalr	$2" << std::endl;
+		dst << "jalr	" << function_name << std::endl;
 
 		y = 18;
 		for (int x = 25; x > 7; x--){
