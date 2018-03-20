@@ -40,6 +40,13 @@ public:
 			}
 			else if ((bindings[x].Id == id) && (bindings[x].context == "global")){
 				if (store == 1){
+					dst << "	.globl" << id << std::endl
+					dst << "	.data" << std::endl
+					dst << "	.align	2" << std::endl
+					dst << "	.type	" << id << ", @object" << std::endl
+					dst << "	.size	" << id << ", 4" << std::endl
+					dst << id << ":" << std::endl;
+					dst << "	.word	" << "2" << std::endl; //neeeeed value maybe what if not assiged just declared
 					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
 					return;
 				}
@@ -116,7 +123,7 @@ public:
 		arg_list->compile(dst, program_data, bindings);
 		//save and restore program data
 		//and the registers apart from 2 and 3
-		dst << "jalr	" << function_name << std::endl;
+		dst << "jal	" << function_name << std::endl;
 
 		y = 18;
 		for (int x = 25; x > 7; x--){
