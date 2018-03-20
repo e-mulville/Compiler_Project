@@ -31,26 +31,28 @@ public:
 			if ((bindings[x].Id == id) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
 				if (store == 1){
 					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					return;
 				}
 				else if(store == 0){
 					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					return;
 				}
 			}
 			else if ((bindings[x].Id == id) && (bindings[x].context == "global")){
 				if (store == 1){
 					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					return;
 				}
 				else if(store == 0){
 					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					return;
 				}
 			}
 		}
-		
-		
+		dst << "cant find variable id:" << id << " context: " << program_data.context << " scope: " << program_data.scope << std::endl;
 	}
-
-
 };
+
 
 class Number
 	: public Statement
@@ -100,10 +102,10 @@ public:
 	{ 
 		meta_data saved_context = program_data;
 		std::string function_name = identifier->getId();
-		program_data.context = function_name;
+		/*program_data.context = function_name;
 		program_data.scope = 0;
 		program_data.stack_counter = 0;
-		program_data.stack_size = 0;
+		program_data.stack_size = 0;*/
 		
 		dst << "addiu	$sp,$sp,-76" << std::endl;
 		int y = 1;
@@ -111,10 +113,10 @@ public:
 			dst << "sw	$" << x << ", " << y*4 << "($sp)" << std::endl;
 			y++;
 		}
-
+		arg_list->compile(dst, program_data, bindings);
 		//save and restore program data
 		//and the registers apart from 2 and 3
-		dst << 	"lw	$2, %got(" << function_name << ")($28)" << std::endl;
+		dst << "lw	$2, %got(" << function_name << ")($28)" << std::endl;
 		dst << "jalr	$2" << std::endl;
 
 		y = 18;

@@ -114,63 +114,61 @@ class ArgumentPair
 {
 public:
 
-	StatementPtr this_statement;
-	StatementPtr next = NULL;
+	StatementPtr prev_statement;
+	StatementPtr this_statement = NULL;
 	std::string type;
 
-	ArgumentPair(StatementPtr _this_statement, StatementPtr _next, std::string _type) :
-		this_statement(_this_statement)
-		, next(_next)
+	ArgumentPair(StatementPtr _prev_statement, StatementPtr _this_statement, std::string _type) :
+		prev_statement(_prev_statement)
+		, this_statement(_this_statement)
 		, type(_type)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		this_statement->translate(dst, scope, scope_bindings);
-		if (next != NULL)
-		{
+		if (prev_statement != NULL){
+			prev_statement->translate(dst, scope, scope_bindings);
+		}
+		if (prev_statement == NULL){
+			this_statement->translate(dst, scope, scope_bindings);	
+		}
+		else
+		{	
 			dst << ",";
-			next->translate(dst, scope, scope_bindings);
+			this_statement->translate(dst, scope, scope_bindings);	
 		}
 	}
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		if (type == "dec"){
-			this_statement->compile(dst, program_data, bindings); //aaaaaaaaaaaaaaaaaaa
-			
-			int x = 4;
-			while (program_data.used_registers[x] == 1) { x++; }
-
-			if (x < 8){
-				dst << "sw	$" << x << ", " << program_data.stack_counter;
-				program_data.stack_counter += 4; 
-			}
+		if (prev_statement != NULL){
+			prev_statement->compile(dst, program_data, bindings);
 		}
-		else if (type == "call"){
-			this_statement->compile(dst, program_data, bindings);
 		
-			int x = 4;
-			while (program_data.used_registers[x] == 1) { x++; }
+		if (type == "dec") {
+				int x = 4;
+				while (program_data.used_registers[x] == 1) { x++; }
+				program_data.used_registers[x] = 1;
 
-			if (x < 8){
-				dst << "move $" << x << ", $2"; //redeclare them with program data ---------------------------------------------------------------
-				var_data data;
-				data.Id = this_statement->getId();
-				data.context = program_data.context; //need the new context
-				data.var_scope = 0;
-				data.stack_address = program_data.stack_counter; //will this work?
-				bindings.push_back(data);
-				program_data.stack_counter += 4;
-			}
-			
+				if (x < 8){
+				
+					dst << "move	$2, $" << x << std::endl; 
+				}
+				
+				this_statement->compile(dst, program_data, bindings);
 		}
-		if (next != NULL)
-		{
-			next->compile(dst, program_data, bindings);
+		if (type == "call") {
+				this_statement->compile(dst, program_data, bindings);			
+				
+				int x = 4;
+				while (program_data.used_registers[x] == 1) { x++; }
+				program_data.used_registers[x] = 1;
+
+				if (x < 8){
+					dst << "move	$2, $" << x << std::endl; 
+				}
 		}
 	}
-
 };
 
 class ProgramPair
@@ -178,30 +176,30 @@ class ProgramPair
 {
 public:
 
-	StatementPtr this_statement;
-	StatementPtr next = NULL;
+	StatementPtr prev_statement;
+	StatementPtr this_statement = NULL;
 
-	ProgramPair(StatementPtr _this_statement, StatementPtr _next) :
-		this_statement(_this_statement)
-		,next(_next)
+	ProgramPair(StatementPtr _prev_statement, StatementPtr _this_statement) :
+		prev_statement(_prev_statement)
+		,this_statement(_this_statement)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		this_statement->translate(dst, scope, scope_bindings);
-		if (next != NULL)
+		prev_statement->translate(dst, scope, scope_bindings);
+		if (this_statement != NULL)
 		{
-			next->translate(dst, scope, scope_bindings);
+			this_statement->translate(dst, scope, scope_bindings);
 			dst << std::endl;
 		}
 	}
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		this_statement->compile(dst, program_data, bindings);
-		if (next != NULL)
+		prev_statement->compile(dst, program_data, bindings);
+		if (this_statement != NULL)
 		{
-			next->compile(dst, program_data, bindings);
+			this_statement->compile(dst, program_data, bindings);
 		}
 	}
 };

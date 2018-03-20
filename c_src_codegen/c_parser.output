@@ -44,7 +44,7 @@ Grammar
    22                   | ARGUMENT_LIST_CALL T_COMMA ARGUMENT_CALL
 
    23 ARGUMENT_DEC: VAR_DECLARATION
-   24             | VALUE
+   24             | VALUE_FOR_STORE
 
    25 ARGUMENT_CALL: VALUE
 
@@ -203,9 +203,9 @@ EXPR3 (57)
 VALUE_WITH_FUNC (58)
     on left: 63 64, on right: 61
 VALUE (59)
-    on left: 65 66 67, on right: 24 25 63 69
+    on left: 65 66 67, on right: 25 63 69
 VALUE_FOR_STORE (60)
-    on left: 68, on right: 13 14 15 16 28
+    on left: 68, on right: 13 14 15 16 24 28
 FUNC_EVOKE (61)
     on left: 69, on right: 30 64
 
@@ -692,16 +692,14 @@ State 45
 
     T_INT       shift, and go to state 4
     T_VOID      shift, and go to state 5
-    T_SUB       shift, and go to state 9
-    T_NUMBER    shift, and go to state 10
-    T_VARIABLE  shift, and go to state 29
+    T_VARIABLE  shift, and go to state 25
 
     $default  reduce using rule 17 (ARGUMENT_LIST_DEC)
 
     VAR_DECLARATION    go to state 71
     ARGUMENT_LIST_DEC  go to state 72
     ARGUMENT_DEC       go to state 73
-    VALUE              go to state 74
+    VALUE_FOR_STORE    go to state 74
 
 
 State 46
@@ -1092,7 +1090,7 @@ State 73
 
 State 74
 
-   24 ARGUMENT_DEC: VALUE .
+   24 ARGUMENT_DEC: VALUE_FOR_STORE .
 
     $default  reduce using rule 24 (ARGUMENT_DEC)
 
@@ -1348,13 +1346,11 @@ State 99
 
     T_INT       shift, and go to state 4
     T_VOID      shift, and go to state 5
-    T_SUB       shift, and go to state 9
-    T_NUMBER    shift, and go to state 10
-    T_VARIABLE  shift, and go to state 29
+    T_VARIABLE  shift, and go to state 25
 
     VAR_DECLARATION  go to state 71
     ARGUMENT_DEC     go to state 107
-    VALUE            go to state 74
+    VALUE_FOR_STORE  go to state 74
 
 
 State 100

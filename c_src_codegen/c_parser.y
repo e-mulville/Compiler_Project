@@ -64,15 +64,15 @@ VAR_DECLARATION : T_INT VALUE_FOR_STORE { $$ = new IntDeclaration($2, 1) ; }
 
 
 ARGUMENT_LIST_DEC : %empty { $$ = new empty();}
-	| ARGUMENT_DEC { $$ = $1; }
+	| ARGUMENT_DEC { $$ = new ArgumentPair(NULL, $1, "dec");  }
 	| ARGUMENT_LIST_DEC T_COMMA ARGUMENT_DEC { $$ = new ArgumentPair($1, $3, "dec"); }
 
 ARGUMENT_LIST_CALL : %empty { $$ = new empty();}
-	| ARGUMENT_CALL { $$ = $1; }
+	| ARGUMENT_CALL { $$ = new ArgumentPair(NULL, $1, "call"); }
 	| ARGUMENT_LIST_CALL T_COMMA ARGUMENT_CALL { $$ = new ArgumentPair($1, $3, "call"); }
 
 ARGUMENT_DEC : VAR_DECLARATION {$$ = $1;} //
-	| VALUE { $$ = $1; } ////////////////////////////
+	| VALUE_FOR_STORE { $$ = $1; } ////////////////////////////
 
 ARGUMENT_CALL : VALUE { $$ = $1; } ////////////////////////////
 

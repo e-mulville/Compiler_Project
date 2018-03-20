@@ -88,7 +88,7 @@ public:
 		program_data.stack_counter = 0;
 		program_data.stack_size = stack_move;
 
-		dst << program_data.context << ":" << std::endl;
+		dst << std::endl << program_data.context << ":" << std::endl;
 		dst << "addiu	$sp,$sp,-" << stack_move << std::endl;
 		dst << "sw	$fp," << stack_move-4 << "($sp)" << std::endl;
 		dst << "sw	$31," << stack_move-8 << "($sp)" << std::endl;
@@ -108,6 +108,9 @@ public:
 		dst << "nop" << std::endl;
 		program_data.context = "global";
 		
+		for (int x = 4; x < 8; x++){
+			program_data.used_registers[x] = 0; //cleaning up for argument passing 
+		}		
 	}
 };
 
@@ -130,6 +133,7 @@ public:
 			data.stack_address = program_data.stack_counter;
 			bindings.push_back(data);
 			program_data.stack_counter += 4;
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
 		}
 		else if (assigned == 1){
 			var_data data;
@@ -140,6 +144,8 @@ public:
 			program_data.stack_counter += 4;
 			bindings.push_back(data);
 			identifier->compile(dst, program_data, bindings);
+
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
 		}
 	}
 
