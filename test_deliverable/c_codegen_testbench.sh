@@ -12,25 +12,46 @@ if [[ ! -f ../c_src_codegen/bin/c_compiler ]] ; then
     have_compiler=1
 fi
 
-input_dir="test_cases"
-driver_dir="test_cases/driver"
-
-working="tmp"
-mkdir -p ${working}
-
 if [[ ${have_compiler} -eq 0 ]] ; then
-    for i in ${driver_dir}/*.c ; do
-    
-        # Compile the reference C version
+    input="test_cases"
+    mkdir -p tmp
+
+    # Compile the reference C version
+    for i in ${input}/driver/*.c ; do
         mips-linux-gnu-gcc $i -c 
     done
+    mv *.o tmp
 
-    for i in ${input_dir}/*.c ; do
-        base=$(echo $i | sed -E -e "s|${input_dir}/([^.]+)[.]c|\1|g");
-
-        # Compile using our compiler
-        $compiler -S $i -o ${working}/$base.s
+    # Compile using our compiler
+    for i in ${input}/*.c ; do
+        base=$(echo $i | sed -E -e "s|${input}/([^.]+)[.]c|\1|g");
+        $compiler -S $i -o tmp/$base.s
     done
 
-    mv *.o tmp
+    cd tmp
+    
+    tot=0
+    passed=0
+    for i in *.s ; do
+        tot=$((tot+1))
+        # Link the generated assembly and the driver
+        # object into a MIPS executable
+        base=$(echo $i | sed -E -e "s|([^.]+)[.]s|\1|g");
+        mips-linux-gnu-gcc -static $base'_driver.o' $i -o $base
+
+        # Run the executable under QEMU
+        qemu-mips $base
+        
+        # Check the result
+	    result=$(echo $?)
+	    if [[ $result -eq 0 ]]
+	    then
+	        echo "Test "$base" passed."
+	        passed=$((passed+1))
+	    else
+	        echo "Test "$base" failed."
+	    fi
+    done
+    
+    echo "Passed "$passed" tests out of "$tot"."
 fi
