@@ -100,6 +100,7 @@ public:
 		//moving number to pass through the declarations and use in bindings - use meta_data?
 		statement_list->compile(dst, program_data, bindings); 
 
+		dst << "move	$2, $0" << std::endl; //default return 0
 		dst << "move	$fp,$sp" << std::endl;
 		dst << "lw	$31," << stack_move-8 << "($sp)" << std::endl;
 		dst << "lw	$fp," << stack_move-4 << "($sp)" << std::endl;
@@ -126,6 +127,9 @@ public:
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
 		if (assigned == 0){
+			if (program_data.context == "global"){
+				dst << ".comm	" << getId() << ",4,4";
+			}
 			var_data data;
 			data.Id = getId();
 			data.context = program_data.context;
@@ -133,20 +137,36 @@ public:
 			data.stack_address = program_data.stack_counter;
 			bindings.push_back(data);
 			program_data.stack_counter += 4;
+			return;
 			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
 		}
 		else if (assigned == 1){
+
 			var_data data;
 			data.Id = getId();
+
+			if (program_data.context == "global"){
+				dst << "	.globl	" << data.Id << std::endl;
+				dst << "	.data" << std::endl;
+				dst << "	.align	2" << std::endl;
+				dst << "	.type	" << data.Id << ", @object" << std::endl;
+				dst << "	.size	" << data.Id << ", 4" << std::endl;
+				dst << data.Id << ":" << std::endl;
+				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare
+			}
+
 			data.context = program_data.context;
 			data.var_scope = program_data.scope;
 			data.stack_address = program_data.stack_counter;
 			program_data.stack_counter += 4;
 			bindings.push_back(data);
-			identifier->compile(dst, program_data, bindings);
+			if (program_data.context != "global"){
+				identifier->compile(dst, program_data, bindings);
+			}
+			return;
 
 			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
-		} //globals???????????????????????????????????
+		}
 	}
 
 };

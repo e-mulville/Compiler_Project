@@ -162,5 +162,45 @@ public:
 };
 
 
+class For
+	: public Control
+{
+public:
+	StatementPtr condition;
+	StatementPtr increment;
+	StatementPtr body;
+
+	For(StatementPtr _condition, StatementPtr _increment, StatementPtr _body) :
+	condition(_condition)
+	,increment(_increment)
+	, body(_body) {}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		condition->compile(dst, program_data, bindings);
+		std::string start_label = makeName("for_start");
+		std::string end_label = makeName("for_end");
+		
+
+		dst << start_label << ":" << std::endl;
+		condition->compile(dst, program_data, bindings);
+		dst << "beq	$2, $0, " << end_label << std::endl;
+		dst << "nop" << std::endl;
+		body->compile(dst, program_data, bindings);
+		increment->compile(dst, program_data, bindings);
+		dst << "beq	$0, $0, " << start_label << std::endl;
+		dst << end_label << ":" << std::endl;
+		
+	}
+
+	
+	
+};
+
+
 
 #endif

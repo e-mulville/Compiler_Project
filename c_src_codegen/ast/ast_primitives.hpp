@@ -40,18 +40,12 @@ public:
 			}
 			else if ((bindings[x].Id == id) && (bindings[x].context == "global")){
 				if (store == 1){
-					dst << "	.globl" << id << std::endl
-					dst << "	.data" << std::endl
-					dst << "	.align	2" << std::endl
-					dst << "	.type	" << id << ", @object" << std::endl
-					dst << "	.size	" << id << ", 4" << std::endl
-					dst << id << ":" << std::endl;
-					dst << "	.word	" << "2" << std::endl; //neeeeed value maybe what if not assiged just declared
-					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					dst << "lw	$3,%got(" << id << ")($28)" << std::endl;
+					dst << "sw	$2,  0($3)" << std::endl;
 					return;
 				}
 				else if(store == 0){
-					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					dst << "lw	$2,%got(" << id << ")($28)" << std::endl;
 					return;
 				}
 			}

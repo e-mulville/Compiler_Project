@@ -21,6 +21,11 @@ int line;
 
 "=="		{ return T_EQUAL;}
 "!="		{ return T_NOTEQUAL; }
+"+="		{ return T_ADDASSIGN; }
+"-="		{ return T_SUBASSIGN; }
+"*="		{ return T_MULTASSIGN; }
+"/="		{ return T_DIVASSIGN; }
+"%="		{ return T_MODASSIGN; }
 "<"		{ return T_LESS; }
 "<="		{ return T_EQLT; }
 ">"		{ return T_GREATER; }
@@ -28,12 +33,17 @@ int line;
 
 "&&"		{ return T_AND; }
 "||"		{ return T_OR; }
+"&"		{ return T_BITAND; }
+"|"		{ return T_BITOR; }
+"^"		{ return T_BITXOR; }
 
 [+]		{ return T_ADD; }
 [-]		{ return T_SUB; }
 [*]		{ return T_MULT; }
 [/]		{ return T_DIV; }
 [%]		{ return T_MOD; }
+"++"		{ return T_INCREMENT; }
+"--"		{ return T_DECREMENT; }
 
 [=]		{ return T_ASSIGN;}
 [;]		{ return T_SEMICOLON; }
@@ -45,6 +55,7 @@ int line;
 if		{ return T_IF; }
 else		{ return T_ELSE; }
 while		{ return T_WHILE; }
+for		{ return T_FOR; }
 
 int		{ return T_INT; }
 void		{ return T_VOID; }

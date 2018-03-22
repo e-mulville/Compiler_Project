@@ -213,16 +213,49 @@ public:
 		right->compile(dst, program_data, bindings);
 
 		while (program_data.used_registers[x] == 1) { x++; }
-		program_data.used_registers[x] = 1;
+		
+		if (x <= 25){
+			program_data.used_registers[x] = 1;
 
-		dst << "move	$" << x;
-		dst<< ", $2" << std::endl;
+			dst << "move	$" << x;
+			dst<< ", $2" << std::endl;
 
-		left->compile(dst, program_data, bindings);
-		dst << "mult	$2, $" << x << std::endl;
-		dst << "mflo	$2" << std::endl; 
+			left->compile(dst, program_data, bindings);
+			dst << "	$2, $" << x << std::endl;
+			dst << "mflo	$2" << std::endl; 
 
-		program_data.used_registers[x] = 0;		
+			program_data.used_registers[x] = 0;
+		}
+		else {
+			int x = 8;
+
+			right->compile(dst, program_data, bindings);
+
+			while (program_data.used_registers[x] == 1) { x++; }
+		
+			if (x <= 25){
+				program_data.used_registers[x] = 1;
+
+				dst << "move	$" << x;
+				dst<< ", $2" << std::endl;
+
+				left->compile(dst, program_data, bindings);
+				dst << "rem	$2, $2, $" << x << std::endl;
+
+				program_data.used_registers[x] = 0;
+			}
+			else {
+				program_data.stack_size += 4;
+				int current_stack = program_data.stack_size;
+				dst << "addu	$sp, $sp, -4" << std::endl;			
+				dst << "sw	$2, 8($sp)" << std::endl;
+				left->compile(dst, program_data, bindings);
+				dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
+				dst << "addu	$sp, $sp, 4" << std::endl;
+				program_data.stack_size -= 4;
+				dst << "rem	$2, $2, $3" << std::endl;
+			}
+		}		
 
 	}
 	
@@ -248,7 +281,70 @@ public:
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
 		
+		int x = 8;
 
+		right->compile(dst, program_data, bindings);
+
+		while (program_data.used_registers[x] == 1) { x++; }
+		program_data.used_registers[x] = 1;
+
+		dst << "move	$" << x;
+		dst<< ", $2" << std::endl;
+
+		left->compile(dst, program_data, bindings);
+		dst << "rem	$2, $2, $" << x << std::endl;
+
+		program_data.used_registers[x] = 0;
+	}
+	
+};
+
+class Increment
+	: public Statement
+{
+public:
+	StatementPtr left;
+	
+	Increment(StatementPtr _left)
+	: left(_left)
+	{}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << "NOT IMPLIMENTED IN TRANSLATOR";
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		std::string id = left->getId();
+		GetLoad(dst, program_data, bindings, id);
+		dst << "addiu $2, 1";
+		GetStore(dst, program_data, bindings, id);
+	}
+	
+};
+
+class Decrement
+	: public Statement
+{
+public:
+	StatementPtr left;
+	
+	Decrement(StatementPtr _left)
+	: left(_left)
+	{}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << "NOT IMPLIMENTED IN TRANSLATOR";
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		std::string id = left->getId();
+		GetLoad(dst, program_data, bindings, id);
+		dst << "addiu $2, 1";
+		GetStore(dst, program_data, bindings, id);
 	}
 	
 };

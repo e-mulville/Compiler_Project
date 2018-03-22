@@ -59,34 +59,45 @@ extern int yydebug;
   enum yytokentype
   {
     T_ASSIGN = 258,
-    T_LBRACKET = 259,
-    T_RBRACKET = 260,
-    T_LCURLBRACKET = 261,
-    T_RCURLBRACKET = 262,
-    T_SEMICOLON = 263,
-    T_COLON = 264,
-    T_COMMA = 265,
-    T_INT = 266,
-    T_VOID = 267,
-    T_RETURN = 268,
-    T_IF = 269,
-    T_ELSE = 270,
-    T_WHILE = 271,
-    T_AND = 272,
-    T_OR = 273,
-    T_ADD = 274,
-    T_SUB = 275,
-    T_MULT = 276,
-    T_DIV = 277,
-    T_MOD = 278,
-    T_EQUAL = 279,
-    T_NOTEQUAL = 280,
-    T_LESS = 281,
-    T_EQLT = 282,
-    T_GREATER = 283,
-    T_EQGT = 284,
-    T_NUMBER = 285,
-    T_VARIABLE = 286
+    T_ADDASSIGN = 259,
+    T_SUBASSIGN = 260,
+    T_MULTASSIGN = 261,
+    T_DIVASSIGN = 262,
+    T_MODASSIGN = 263,
+    T_LBRACKET = 264,
+    T_RBRACKET = 265,
+    T_LCURLBRACKET = 266,
+    T_RCURLBRACKET = 267,
+    T_SEMICOLON = 268,
+    T_COLON = 269,
+    T_COMMA = 270,
+    T_INT = 271,
+    T_VOID = 272,
+    T_RETURN = 273,
+    T_IF = 274,
+    T_ELSE = 275,
+    T_WHILE = 276,
+    T_FOR = 277,
+    T_AND = 278,
+    T_OR = 279,
+    T_BITAND = 280,
+    T_BITOR = 281,
+    T_BITXOR = 282,
+    T_ADD = 283,
+    T_SUB = 284,
+    T_MULT = 285,
+    T_DIV = 286,
+    T_MOD = 287,
+    T_INCREMENT = 288,
+    T_DECREMENT = 289,
+    T_EQUAL = 290,
+    T_NOTEQUAL = 291,
+    T_LESS = 292,
+    T_EQLT = 293,
+    T_GREATER = 294,
+    T_EQGT = 295,
+    T_NUMBER = 296,
+    T_VARIABLE = 297
   };
 #endif
 
@@ -101,7 +112,7 @@ union YYSTYPE
 	double number;
 	std::string *string;
 
-#line 105 "c_parser.tab.hpp" /* yacc.c:1909  */
+#line 116 "c_parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

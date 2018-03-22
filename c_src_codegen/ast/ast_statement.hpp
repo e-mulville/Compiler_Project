@@ -50,6 +50,25 @@ public:
 
 	virtual std::string getId() const { return "error";}
 	virtual double getValue() const { return 99999;}
+
+
+	virtual void GetStore(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings, std::string id) const
+	{
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			if ((bindings[x].Id == id) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
+				dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+			}
+		}
+	}
+
+	virtual void GetLoad(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings, std::string id) const
+	{
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			if ((bindings[x].Id == id) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
+				dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+			}
+		}
+	}
 	//! Evaluate the tree using the given mapping of variables to numbers
 	
 	/*virtual std::string makeName(std::string name) const {
