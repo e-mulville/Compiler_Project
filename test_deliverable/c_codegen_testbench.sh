@@ -13,6 +13,7 @@ if [[ ! -f ../c_src_codegen/bin/c_compiler ]] ; then
 fi
 
 if [[ ${have_compiler} -eq 0 ]] ; then
+    rm -rf tmp
     input="test_cases"
     mkdir -p tmp
 

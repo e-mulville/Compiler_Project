@@ -1,5 +1,5 @@
 int main(){
-    int i=10;
-    for(i=5; i!=0; i=i-1){}
+    int i=9;
+    for(i=10; i!=0; i=i-2){}
     return i;
 }
