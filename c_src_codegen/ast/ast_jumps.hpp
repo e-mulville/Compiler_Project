@@ -47,5 +47,27 @@ public:
 	
 };
 
+class Goto
+	: public Jump
+{
+public:
+	std::string label;
+	
+	Goto(std::string &_label)
+	: label(_label) {}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << "goto ";
+		dst << std::endl;
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{		
+		dst << "j	" << label << std::endl;
+	}
+	
+};
+
 
 #endif

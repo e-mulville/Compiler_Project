@@ -131,6 +131,96 @@ public:
 	
 };
 
+
+class Label
+	: public Statement
+{
+private:
+	std::string id;
+public:
+	Label(const std::string &_id)
+		: id(_id)
+	{}
+
+	std::string getId() const override
+	{ 
+		std::string temp = id; 
+		temp.pop_back();
+		return temp; 
+	}
+	
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << getId();
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		dst << id << std::endl;
+	}
+};
+
+class Array
+	: public Statement
+{
+private:
+	std::string id;
+	bool store;
+	double position;
+public:
+	Array(const std::string &_id, bool _store, double _position)
+	: id(_id)
+	, store(_store)
+	, position(_position)	
+	{}
+
+	std::string getId() const override
+	{ 
+		return id;
+	}
+
+	double getValue() const override
+	{
+		return position;
+	}
+	
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << id;
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			std::string tempId = getId();
+			tempId += "[" + std::to_string(x) + "]";
+			if ((bindings[x].Id == tempId) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
+				if (store == 1){
+					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					return;
+				}
+				else if(store == 0){
+					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+					return;
+				}
+			}
+			else {
+				dst << "la	$3," << id << std::endl;
+				if (store == 1){
+					dst << "sw	$2," << position*4 << "($3)" << std::endl;
+					return;
+				}
+				else if(store == 0){
+					dst << "lw	$2," << position*4 << "($3)" << std::endl;
+					return;
+				}
+			}
+		}
+	}
+};
+
 class empty
 	: public Statement
 {

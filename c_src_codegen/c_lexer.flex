@@ -56,17 +56,25 @@ if		{ return T_IF; }
 else		{ return T_ELSE; }
 while		{ return T_WHILE; }
 for		{ return T_FOR; }
+do		{ return T_DO; }
 
 int		{ return T_INT; }
 void		{ return T_VOID; }
 
 return		{ return T_RETURN; }
+goto		{ return T_GOTO; }
+
+volatile	{;} //not used
 
 [(]             { return T_LBRACKET; }
 [)]             { return T_RBRACKET; }
 [{]		{ return T_LCURLBRACKET; }
 [}]		{ return T_RCURLBRACKET; }
-	
+"["		{ return T_LSQR; }
+"]"		{ return T_RSQR; }
+
+
+[a-zA-Z_][0-9a-zA-Z]*[:]  { yylval.string=new std::string(yytext); return T_LABEL; }
 [0-9]+([.][0-9]*)? { yylval.number=strtod(yytext, 0); return T_NUMBER;  }
 [a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_VARIABLE; }
 

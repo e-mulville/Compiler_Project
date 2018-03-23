@@ -171,6 +171,53 @@ public:
 
 };
 
+class ArrayDeclaration
+	: public Declaration
+{
+public:
+	
+	ArrayDeclaration(StatementPtr _identifier, bool _assigned)
+	: Declaration("", _identifier, _assigned) {var_number += _identifier->getValue();}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		if (assigned == 0){
+			if (program_data.context == "global"){
+				dst << "	.comm	" << getId() << "," << identifier->getValue()*4 << ",4" << std::endl;
+				var_data data;
+				data.Id = getId();
+				data.context = program_data.context;
+				data.var_scope = program_data.scope;
+				data.stack_address = program_data.stack_counter;
+				bindings.push_back(data);
+				program_data.stack_counter += 4;
+				return;
+			}
+			else {
+				for (int x = identifier->getValue(); x >= 0; x--){
+					var_data data;
+					std::string tempId = getId();
+					tempId += "[" + std::to_string(x) + "]";
+					data.Id = tempId;
+					data.context = program_data.context;
+					data.var_scope = program_data.scope;
+					data.stack_address = program_data.stack_counter;
+					bindings.push_back(data);
+					program_data.stack_counter += 4;
+					return;
+				}
+			}
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
+		}
+		else if (assigned == 1){
+			return;
+
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
+		}
+	}
+
+};
+
 class VoidDeclaration
 	: public Declaration
 {
