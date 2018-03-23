@@ -48,6 +48,7 @@ public:
 		dst << "):" << std::endl;
 		scope++;
 		body->translate(dst, scope, scope_bindings);
+		dst << "pass" << std::endl;
 		scope--;
 	}
 
@@ -90,15 +91,20 @@ public:
 		dst << "):" << std::endl;
 		scope++;
 		if_body->translate(dst, scope, scope_bindings);
+		for(int x = 0; x < scope; x++){
+			dst << "    ";
+		}
+		dst << "pass" << std::endl;
 		scope--;
 		for(int x = 0; x < scope; x++){
-			dst << "	";
+			dst << "    ";
 		}
 		dst << "else:" << std::endl;		
 		scope++;
 		for(int x = 0; x < scope; x++){
-			dst << "	";
+			dst << "    ";
 		}
+		dst << "pass" << std::endl;
 		else_body->translate(dst, scope, scope_bindings);
 		scope--;
 	}
@@ -146,8 +152,9 @@ public:
 		dst << "):" << std::endl;	
 		scope++;
 		for(int x = 0; x < scope; x++){
-			dst << "	";
+			dst << "    ";
 		}
+		dst << "pass" << std::endl;
 		body->translate(dst, scope, scope_bindings);
 		scope--;
 	}

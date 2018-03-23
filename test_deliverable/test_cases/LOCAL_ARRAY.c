@@ -1,4 +1,5 @@
 int main(){
-    int array[10]={0};
-    return array[5];
+    	int a[5];
+	a[0] = 1;
+	return 1;
 }
