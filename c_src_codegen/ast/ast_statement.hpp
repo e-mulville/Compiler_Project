@@ -26,6 +26,7 @@ public:
 	{
 		std::string Id;
 		std::string context;
+		std::string type;
 		int var_scope;
 		int stack_address;
 	};

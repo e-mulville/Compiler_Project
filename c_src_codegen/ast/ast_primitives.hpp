@@ -29,28 +29,84 @@ public:
 	{
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			if ((bindings[x].Id == id) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
-				if (store == 1){
-					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
-					return;
+				if (bindings[x].type == "int"){
+					if (store == 1){
+						dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+						return;
+					}
 				}
-				else if(store == 0){
-					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
-					return;
+				if (bindings[x].type == "char"){
+					if (store == 1){
+						dst << "sb	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						dst << "lb	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+						return;
+					}
 				}
+				
 			}
 			else if ((bindings[x].Id == id) && (bindings[x].context == "global")){
-				if (store == 1){
-					dst << "lw	$3,%got(" << id << ")($28)" << std::endl;
-					dst << "sw	$2,  0($3)" << std::endl;
-					return;
+				if(bindings[x].type == "int"){				
+					if (store == 1){
+						dst << "lui	$3,%hi(" << id << ")" << std::endl;
+						dst << "addiu	$3,$3,%lo(" << id << ")" << std::endl;
+						dst << "sw	$2,  0($3)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						dst << "lui	$2,%hi(" << id << ")" << std::endl;
+						dst << "lw	$2,%lo(" << id << ")($2)" << std::endl;
+						return;
+					}
 				}
-				else if(store == 0){
-					dst << "lw	$2,%got(" << id << ")($28)" << std::endl;
-					return;
-				}
+				if(bindings[x].type == "char"){				
+					if (store == 1){
+						dst << "lui	$3,%hi(" << id << ")" << std::endl;
+						dst << "addiu	$3,$3,%lo(" << id << ")" << std::endl;
+						dst << "sb	$2,  0($3)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						dst << "lui	$2,%hi(" << id << ")" << std::endl;
+						dst << "lb	$2,%lo(" << id << ")($2)" << std::endl;
+						return;
+					}
+				} 
 			}
 		}
 		dst << "cant find variable id:" << id << " context: " << program_data.context << " scope: " << program_data.scope << std::endl;
+	}
+};
+
+class Char
+	: public Statement
+{
+private:
+	std::string value;
+public:
+	Char(const std::string &_value)
+		: value(_value)
+	{}
+
+	double getValue() const override
+	{ 
+	char temp = value[1];
+	return temp; }
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst<<value;
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		dst<< "li	$2, " << value << std::endl;	
 	}
 };
 
@@ -195,7 +251,7 @@ public:
 	{
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			std::string tempId = getId();
-			tempId += "[" + std::to_string(x) + "]";
+			tempId += "[" + std::to_string(position) + "]";
 			if ((bindings[x].Id == tempId) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
 				if (store == 1){
 					dst << "sw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
@@ -205,17 +261,21 @@ public:
 					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
 					return;
 				}
+				
 			}
-			else {
+			else if ((bindings[x].Id == id) && (bindings[x].context == "global")) {
 				dst << "la	$3," << id << std::endl;
 				if (store == 1){
 					dst << "sw	$2," << position*4 << "($3)" << std::endl;
+					dst << "cant find variable id:" << tempId << " context: " << program_data.context << " scope: " << program_data.scope << std::endl;
 					return;
 				}
 				else if(store == 0){
 					dst << "lw	$2," << position*4 << "($3)" << std::endl;
+					dst << "cant find variable id:" << tempId << " context: " << program_data.context << " scope: " << program_data.scope << std::endl;
 					return;
 				}
+				
 			}
 		}
 	}

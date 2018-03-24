@@ -56,8 +56,10 @@ public:
 	{
 		
 		if (program_data.context == "global"){
+			dst << "	.abicalls" << std::endl;
 			left->compile(dst, program_data, bindings);
 			dst << getValue() << std::endl;
+			dst << "	.text" << std::endl;
 		}
 		else {	
 			right->compile(dst, program_data, bindings);	

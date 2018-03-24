@@ -1,5 +1,10 @@
 int i = 0;
 
 int main(){
-    return i;
+	if (i == 0){
+		return 0;
+	}
+	else {
+		return 1;
+	}
 }

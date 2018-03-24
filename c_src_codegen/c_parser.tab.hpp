@@ -75,34 +75,37 @@ extern int yydebug;
     T_COMMA = 272,
     T_INT = 273,
     T_VOID = 274,
-    T_RETURN = 275,
-    T_GOTO = 276,
-    T_IF = 277,
-    T_ELSE = 278,
-    T_WHILE = 279,
-    T_FOR = 280,
-    T_DO = 281,
-    T_AND = 282,
-    T_OR = 283,
-    T_BITAND = 284,
-    T_BITOR = 285,
-    T_BITXOR = 286,
-    T_ADD = 287,
-    T_SUB = 288,
-    T_MULT = 289,
-    T_DIV = 290,
-    T_MOD = 291,
-    T_INCREMENT = 292,
-    T_DECREMENT = 293,
-    T_EQUAL = 294,
-    T_NOTEQUAL = 295,
-    T_LESS = 296,
-    T_EQLT = 297,
-    T_GREATER = 298,
-    T_EQGT = 299,
-    T_NUMBER = 300,
-    T_VARIABLE = 301,
-    T_LABEL = 302
+    T_CHAR = 275,
+    T_SHORT = 276,
+    T_RETURN = 277,
+    T_GOTO = 278,
+    T_IF = 279,
+    T_ELSE = 280,
+    T_WHILE = 281,
+    T_FOR = 282,
+    T_DO = 283,
+    T_AND = 284,
+    T_OR = 285,
+    T_BITAND = 286,
+    T_BITOR = 287,
+    T_BITXOR = 288,
+    T_ADD = 289,
+    T_SUB = 290,
+    T_MULT = 291,
+    T_DIV = 292,
+    T_MOD = 293,
+    T_INCREMENT = 294,
+    T_DECREMENT = 295,
+    T_EQUAL = 296,
+    T_NOTEQUAL = 297,
+    T_LESS = 298,
+    T_EQLT = 299,
+    T_GREATER = 300,
+    T_EQGT = 301,
+    T_NUMBER = 302,
+    T_VARIABLE = 303,
+    T_LABEL = 304,
+    T_CHAR_PRIMITIVE = 305
   };
 #endif
 
@@ -117,7 +120,7 @@ union YYSTYPE
 	double number;
 	std::string *string;
 
-#line 121 "c_parser.tab.hpp" /* yacc.c:1909  */
+#line 124 "c_parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

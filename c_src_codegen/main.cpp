@@ -41,8 +41,6 @@ int main(int argc, char **argv)
 		outputFile << "    import sys" << std::endl << "    ret=main()" << std::endl << "    sys.exit(ret)" << std::endl;
 	}
 	if (std::string(argv[1]) == "-S"){
-		outputFile << "lui	$28,%hi(__gnu_local_gp)" << std::endl;
-		outputFile << "addiu	$28,$28,%lo(__gnu_local_gp)" << std::endl;		
 		
 		ast->compile(outputFile, program_data, bindings);
 	}

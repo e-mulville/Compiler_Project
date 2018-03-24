@@ -60,6 +60,8 @@ do		{ return T_DO; }
 
 int		{ return T_INT; }
 void		{ return T_VOID; }
+char		{ return T_CHAR; }
+short		{ return T_SHORT; }
 
 return		{ return T_RETURN; }
 goto		{ return T_GOTO; }
@@ -74,6 +76,7 @@ volatile	{;} //not used
 "]"		{ return T_RSQR; }
 
 
+['][a-zA-Z]['] { yylval.string=new std::string(yytext); return T_CHAR_PRIMITIVE; }
 [a-zA-Z_][0-9a-zA-Z]*[:]  { yylval.string=new std::string(yytext); return T_LABEL; }
 [0-9]+([.][0-9]*)? { yylval.number=strtod(yytext, 0); return T_NUMBER;  }
 [a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_VARIABLE; }

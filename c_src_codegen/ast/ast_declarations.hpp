@@ -122,7 +122,7 @@ class IntDeclaration
 public:
 	
 	IntDeclaration(StatementPtr _identifier, bool _assigned)
-	: Declaration("", _identifier, _assigned) {var_number++;}
+	: Declaration("int", _identifier, _assigned) {var_number++;}
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
@@ -135,6 +135,7 @@ public:
 			data.context = program_data.context;
 			data.var_scope = program_data.scope;
 			data.stack_address = program_data.stack_counter;
+			data.type = type;
 			bindings.push_back(data);
 			program_data.stack_counter += 4;
 			return;
@@ -146,18 +147,18 @@ public:
 			data.Id = getId();
 
 			if (program_data.context == "global"){
-				dst << "	.globl	" << data.Id << std::endl;
 				dst << "	.data" << std::endl;
 				dst << "	.align	2" << std::endl;
 				dst << "	.type	" << data.Id << ", @object" << std::endl;
 				dst << "	.size	" << data.Id << ", 4" << std::endl;
 				dst << data.Id << ":" << std::endl;
-				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare
+				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare		
 			}
 
 			data.context = program_data.context;
 			data.var_scope = program_data.scope;
 			data.stack_address = program_data.stack_counter;
+			data.type = type;
 			program_data.stack_counter += 4;
 			bindings.push_back(data);
 			if (program_data.context != "global"){
@@ -171,13 +172,121 @@ public:
 
 };
 
+class CharDeclaration
+	: public Declaration
+{
+public:
+	
+	CharDeclaration(StatementPtr _identifier, bool _assigned)
+	: Declaration("char", _identifier, _assigned) {var_number++;}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		if (assigned == 0){
+			if (program_data.context == "global"){
+				dst << ".comm	" << getId() << ",4,4";
+			}
+			var_data data;
+			data.Id = getId();
+			data.context = program_data.context;
+			data.var_scope = program_data.scope;
+			data.stack_address = program_data.stack_counter;
+			data.type = type;
+			bindings.push_back(data);
+			program_data.stack_counter += 4;
+			return;
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
+		}
+		else if (assigned == 1){
+
+			var_data data;
+			data.Id = getId();
+
+			if (program_data.context == "global"){
+				dst << "	.data" << std::endl;
+				dst << "	.align	2" << std::endl;
+				dst << "	.type	" << data.Id << ", @object" << std::endl;
+				dst << "	.size	" << data.Id << ", 1" << std::endl;
+				dst << data.Id << ":" << std::endl;
+				dst << "	.byte	"; //neeeeed value maybe what if not assiged just declare		
+			}
+
+			data.context = program_data.context;
+			data.var_scope = program_data.scope;
+			data.stack_address = program_data.stack_counter;
+			data.type = type;
+			program_data.stack_counter += 4;
+			bindings.push_back(data);
+			if (program_data.context != "global"){
+				identifier->compile(dst, program_data, bindings);
+			}
+			return;
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
+		}
+	}
+};
+
+class ShortDeclaration
+	: public Declaration
+{
+public:
+	
+	ShortDeclaration(StatementPtr _identifier, bool _assigned)
+	: Declaration("short", _identifier, _assigned) {var_number++;}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		if (assigned == 0){
+			if (program_data.context == "global"){
+				dst << ".comm	" << getId() << ",4,4";
+			}
+			var_data data;
+			data.Id = getId();
+			data.context = program_data.context;
+			data.var_scope = program_data.scope;
+			data.stack_address = program_data.stack_counter;
+			data.type = type;
+			bindings.push_back(data);
+			program_data.stack_counter += 4;
+			return;
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
+		}
+		else if (assigned == 1){
+
+			var_data data;
+			data.Id = getId();
+
+			if (program_data.context == "global"){
+				dst << "	.data" << std::endl;
+				dst << "	.align	2" << std::endl;
+				dst << "	.type	" << data.Id << ", @object" << std::endl;
+				dst << "	.size	" << data.Id << ", 2" << std::endl;
+				dst << data.Id << ":" << std::endl;
+				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare		
+			}
+
+			data.context = program_data.context;
+			data.var_scope = program_data.scope;
+			data.stack_address = program_data.stack_counter;
+			data.type = type;
+			program_data.stack_counter += 4;
+			bindings.push_back(data);
+			if (program_data.context != "global"){
+				identifier->compile(dst, program_data, bindings);
+			}
+			return;
+			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
+		}
+	}
+};
+
 class ArrayDeclaration
 	: public Declaration
 {
 public:
 	
-	ArrayDeclaration(StatementPtr _identifier, bool _assigned)
-	: Declaration("", _identifier, _assigned) {var_number += _identifier->getValue();}
+	ArrayDeclaration(std::string _type, StatementPtr _identifier, bool _assigned)
+	: Declaration(_type, _identifier, _assigned) {var_number += _identifier->getValue();}
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
@@ -189,12 +298,13 @@ public:
 				data.context = program_data.context;
 				data.var_scope = program_data.scope;
 				data.stack_address = program_data.stack_counter;
+				data.type = type;
 				bindings.push_back(data);
 				program_data.stack_counter += 4;
 				return;
 			}
 			else {
-				for (int x = identifier->getValue(); x >= 0; x--){
+				for (double x = identifier->getValue(); x >= 0; x--){
 					var_data data;
 					std::string tempId = getId();
 					tempId += "[" + std::to_string(x) + "]";
@@ -202,10 +312,11 @@ public:
 					data.context = program_data.context;
 					data.var_scope = program_data.scope;
 					data.stack_address = program_data.stack_counter;
+					data.type = type;
 					bindings.push_back(data);
 					program_data.stack_counter += 4;
-					return;
 				}
+				return;
 			}
 			//dst << "declared variable id:" << data.Id << " context: " << data.context << " scope: " << data.var_scope << std::endl;
 		}

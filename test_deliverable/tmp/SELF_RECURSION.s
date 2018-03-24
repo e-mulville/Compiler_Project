@@ -1,5 +1,3 @@
-lui	$28,%hi(__gnu_local_gp)
-addiu	$28,$28,%lo(__gnu_local_gp)
 nop
 
 f:
