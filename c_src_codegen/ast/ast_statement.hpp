@@ -13,6 +13,7 @@ class Statement;
 
 static int var_number;
 static int name_counter = 0;
+static std::string else_if_name;
 
 
 typedef const Statement *StatementPtr;
@@ -20,7 +21,7 @@ typedef const Statement *StatementPtr;
 class Statement
 {
 public:
-	virtual ~Statement(){}	
+	virtual ~Statement(){}
 
 	struct var_data
 	{
@@ -31,18 +32,18 @@ public:
 		int stack_address;
 	};
 
-	struct meta_data 
+	struct meta_data
 	{
 		int scope;
 		std::string context;
 		int stack_counter;
 		int stack_size;
 		bool used_registers[32] {0};
-		
+
 	};
 
 
-	
+
 
 	//! Tell and Statement to translate to stream
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const =0;
@@ -71,24 +72,24 @@ public:
 		}
 	}
 	//! Evaluate the tree using the given mapping of variables to numbers
-	
+
 	/*virtual std::string makeName(std::string name) const {
 		name += "_";
 		name += name_counter;
 		name_counter++;
 		return name;
 	} weird bug */
-		
-	
-	
+
+
+
 	virtual std::string makeName(std::string name) const {
 		std::string temp = name;
-		temp += "_"; 
+		temp += "_";
 		temp += std::to_string(name_counter);
 		name_counter++;
 		return temp;
 	}
-		
+
 };
 
 
@@ -109,14 +110,14 @@ public:
 	{
 		this_statement->translate(dst, scope, scope_bindings);
 		if (next != NULL)
-		{	
+		{
 			for(int x = 0; x < scope; x++){
 				dst << "    ";
 			}
 			next->translate(dst, scope, scope_bindings);
 
-			
-		} 
+
+		}
 	}
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
@@ -150,12 +151,12 @@ public:
 			prev_statement->translate(dst, scope, scope_bindings);
 		}
 		if (prev_statement == NULL){
-			this_statement->translate(dst, scope, scope_bindings);	
+			this_statement->translate(dst, scope, scope_bindings);
 		}
 		else
-		{	
+		{
 			dst << ",";
-			this_statement->translate(dst, scope, scope_bindings);	
+			this_statement->translate(dst, scope, scope_bindings);
 		}
 	}
 
@@ -164,28 +165,28 @@ public:
 		if (prev_statement != NULL){
 			prev_statement->compile(dst, program_data, bindings);
 		}
-		
+
 		if (type == "dec") {
 				int x = 4;
 				while (program_data.used_registers[x] == 1) { x++; }
 				program_data.used_registers[x] = 1;
 
 				if (x < 8){
-				
-					dst << "move	$2, $" << x << std::endl; 
+
+					dst << "move	$2, $" << x << std::endl;
 				}
-				
+
 				this_statement->compile(dst, program_data, bindings);
 		}
 		if (type == "call") {
-				this_statement->compile(dst, program_data, bindings);			
-				
+				this_statement->compile(dst, program_data, bindings);
+
 				int x = 4;
 				while (program_data.used_registers[x] == 1) { x++; }
 				program_data.used_registers[x] = 1;
 
 				if (x < 8){
-					dst << "move	$2, $" << x << std::endl; 
+					dst << "move	$2, $" << x << std::endl;
 				}
 		}
 	}
@@ -220,6 +221,36 @@ public:
 		if (this_statement != NULL)
 		{
 			this_statement->compile(dst, program_data, bindings);
+		}
+	}
+};
+
+class ElseIfPair
+	: public Statement
+{
+public:
+
+	StatementPtr prev_statement;
+	StatementPtr this_statement = NULL;
+
+	ElseIfPair(StatementPtr _prev_statement, StatementPtr _this_statement) :
+		prev_statement(_prev_statement)
+		,this_statement(_this_statement)
+	{}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+	 dst << "!!!!!!!!!!!!!!!!!!!!!!!!";
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		prev_statement->compile(dst, program_data, bindings);
+		if (this_statement != NULL)
+		{
+			std::string temp_else_if_name = else_if_name;
+			this_statement->compile(dst, program_data, bindings);
+			else_if_name = temp_else_if_name;
 		}
 	}
 };

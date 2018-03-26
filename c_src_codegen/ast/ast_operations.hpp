@@ -9,7 +9,7 @@ class Operator
 {
 protected:
 
-	
+
 public:
 	StatementPtr left;
 	StatementPtr right;
@@ -29,7 +29,7 @@ public:
 	}
 
 	double getValue() const override
-    	{ 
+    	{
 		return right->getValue();
 	}
 };
@@ -38,14 +38,14 @@ class Add
 	: public Operator
 {
 public:
-	
+
 	Add(StatementPtr _left, StatementPtr _right)
 	: Operator(_left, _right)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		
+
 		left->translate(dst, scope, scope_bindings);
 		dst << "+";
 		right->translate(dst, scope, scope_bindings);
@@ -58,7 +58,7 @@ public:
 		right->compile(dst, program_data, bindings);
 
 		while (program_data.used_registers[x] == 1) { x++; }
-		
+
 		if (x <= 25){
 			program_data.used_registers[x] = 1;
 
@@ -73,7 +73,7 @@ public:
 		else {
 			program_data.stack_size += 4;
 			int current_stack = program_data.stack_size;
-			dst << "addu	$sp, $sp, -4" << std::endl;			
+			dst << "addu	$sp, $sp, -4" << std::endl;
 			dst << "sw	$2, 8($sp)" << std::endl;
 			left->compile(dst, program_data, bindings);
 			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
@@ -82,21 +82,21 @@ public:
 			dst << "addu	$2, $2, $3" << std::endl;
 		}
 	}
-	
+
 };
 
 class Sub
 	: public Operator
 {
 public:
-	
+
 	Sub(StatementPtr _left, StatementPtr _right)
 	: Operator(_left, _right)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		
+
 		left->translate(dst, scope, scope_bindings);
 		dst << "-";
 		right->translate(dst, scope, scope_bindings);
@@ -109,7 +109,7 @@ public:
 		right->compile(dst, program_data, bindings);
 
 		while (program_data.used_registers[x] == 1) { x++; }
-		
+
 		if (x <= 25){
 			program_data.used_registers[x] = 1;
 
@@ -124,29 +124,29 @@ public:
 		else {
 			program_data.stack_size += 4;
 			int current_stack = program_data.stack_size;
-			dst << "addu	$sp, $sp, -4" << std::endl;			
+			dst << "addu	$sp, $sp, -4" << std::endl;
 			dst << "sw	$2, 8($sp)" << std::endl;
 			left->compile(dst, program_data, bindings);
 			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
 			dst << "addu	$sp, $sp, 4" << std::endl;
 			program_data.stack_size -= 4;
 			dst << "subu	$2, $2, $3" << std::endl;
-		}			
-	}	
+		}
+	}
 };
 
 class Mult
 	: public Operator
 {
 public:
-	
+
 	Mult(StatementPtr _left, StatementPtr _right)
 	: Operator(_left, _right)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		
+
 		left->translate(dst, scope, scope_bindings);
 		dst << "*";
 		right->translate(dst, scope, scope_bindings);
@@ -160,7 +160,7 @@ public:
 		right->compile(dst, program_data, bindings);
 
 		while (program_data.used_registers[x] == 1) { x++; }
-		
+
 		if (x <= 25){
 			program_data.used_registers[x] = 1;
 
@@ -169,38 +169,38 @@ public:
 
 			left->compile(dst, program_data, bindings);
 			dst << "mult	$2, $" << x << std::endl;
-			dst << "mflo	$2" << std::endl; 
+			dst << "mflo	$2" << std::endl;
 
 			program_data.used_registers[x] = 0;
 		}
 		else {
 			program_data.stack_size += 4;
 			int current_stack = program_data.stack_size;
-			dst << "addu	$sp, $sp, -4" << std::endl;			
+			dst << "addu	$sp, $sp, -4" << std::endl;
 			dst << "sw	$2, 8($sp)" << std::endl;
 			left->compile(dst, program_data, bindings);
 			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
 			dst << "addu	$sp, $sp, 4" << std::endl;
 			program_data.stack_size -= 4;
 			dst << "mult	$2, $3" << x << std::endl;
-			dst << "mflo	$2" << std::endl; 
+			dst << "mflo	$2" << std::endl;
 		}
 	}
-	
+
 };
 
 class Div
 	: public Operator
 {
 public:
-	
+
 	Div(StatementPtr _left, StatementPtr _right)
 	: Operator(_left, _right)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		
+
 		left->translate(dst, scope, scope_bindings);
 		dst << "/";
 		right->translate(dst, scope, scope_bindings);
@@ -213,7 +213,7 @@ public:
 		right->compile(dst, program_data, bindings);
 
 		while (program_data.used_registers[x] == 1) { x++; }
-		
+
 		if (x <= 25){
 			program_data.used_registers[x] = 1;
 
@@ -221,58 +221,38 @@ public:
 			dst<< ", $2" << std::endl;
 
 			left->compile(dst, program_data, bindings);
-			dst << "	$2, $" << x << std::endl;
-			dst << "mflo	$2" << std::endl; 
+			dst << "div	$2, $" << x << std::endl;
+			dst << "mflo	$2" << std::endl;
 
 			program_data.used_registers[x] = 0;
 		}
 		else {
-			int x = 8;
-
-			right->compile(dst, program_data, bindings);
-
-			while (program_data.used_registers[x] == 1) { x++; }
-		
-			if (x <= 25){
-				program_data.used_registers[x] = 1;
-
-				dst << "move	$" << x;
-				dst<< ", $2" << std::endl;
-
-				left->compile(dst, program_data, bindings);
-				dst << "rem	$2, $2, $" << x << std::endl;
-
-				program_data.used_registers[x] = 0;
-			}
-			else {
-				program_data.stack_size += 4;
-				int current_stack = program_data.stack_size;
-				dst << "addu	$sp, $sp, -4" << std::endl;			
-				dst << "sw	$2, 8($sp)" << std::endl;
-				left->compile(dst, program_data, bindings);
-				dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
-				dst << "addu	$sp, $sp, 4" << std::endl;
-				program_data.stack_size -= 4;
-				dst << "rem	$2, $2, $3" << std::endl;
-			}
-		}		
-
+			program_data.stack_size += 4;
+			int current_stack = program_data.stack_size;
+			dst << "addu	$sp, $sp, -4" << std::endl;
+			dst << "sw	$2, 8($sp)" << std::endl;
+			left->compile(dst, program_data, bindings);
+			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
+			dst << "addu	$sp, $sp, 4" << std::endl;
+			program_data.stack_size -= 4;
+			dst << "div	$2, $3" << x << std::endl;
+			dst << "mflo	$2" << std::endl;
+		}
 	}
-	
 };
 
 class Mod
 	: public Operator
 {
 public:
-	
+
 	Mod(StatementPtr _left, StatementPtr _right)
 	: Operator(_left, _right)
 	{}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
-		
+
 		left->translate(dst, scope, scope_bindings);
 		dst << "%";
 		right->translate(dst, scope, scope_bindings);
@@ -280,23 +260,134 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		
 		int x = 8;
 
 		right->compile(dst, program_data, bindings);
 
 		while (program_data.used_registers[x] == 1) { x++; }
-		program_data.used_registers[x] = 1;
 
-		dst << "move	$" << x;
-		dst<< ", $2" << std::endl;
+		if (x <= 25){
+			program_data.used_registers[x] = 1;
 
-		left->compile(dst, program_data, bindings);
-		dst << "rem	$2, $2, $" << x << std::endl;
+			dst << "move	$" << x << ", $2" << std::endl;
 
-		program_data.used_registers[x] = 0;
+			left->compile(dst, program_data, bindings);
+			dst << "rem	$2, $" << x << std::endl;
+
+			program_data.used_registers[x] = 0;
+		}
+		else {
+			program_data.stack_size += 4;
+			int current_stack = program_data.stack_size;
+			dst << "addu	$sp, $sp, -4" << std::endl;
+			dst << "sw	$2, 8($sp)" << std::endl;
+			left->compile(dst, program_data, bindings);
+			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
+			dst << "addu	$sp, $sp, 4" << std::endl;
+			program_data.stack_size -= 4;
+			dst << "rem	$2, $2, $3" << std::endl;
+		}
 	}
-	
+};
+
+class ShiftLeft
+	: public Operator
+{
+public:
+
+	ShiftLeft(StatementPtr _left, StatementPtr _right)
+	: Operator(_left, _right)
+	{}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+
+		left->translate(dst, scope, scope_bindings);
+		dst << "<<";
+		right->translate(dst, scope, scope_bindings);
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+
+		int x = 8;
+
+		right->compile(dst, program_data, bindings);
+
+		while (program_data.used_registers[x] == 1) { x++; }
+
+		if (x <= 25){
+			program_data.used_registers[x] = 1;
+
+			dst << "move	$" << x << ", $2" << std::endl;
+
+			left->compile(dst, program_data, bindings);
+			dst << "sll	$2, $" << x << std::endl;
+
+			program_data.used_registers[x] = 0;
+		}
+		else {
+			program_data.stack_size += 4;
+			int current_stack = program_data.stack_size;
+			dst << "addu	$sp, $sp, -4" << std::endl;
+			dst << "sw	$2, 8($sp)" << std::endl;
+			left->compile(dst, program_data, bindings);
+			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
+			dst << "addu	$sp, $sp, 4" << std::endl;
+			program_data.stack_size -= 4;
+			dst << "sll	$2, $2, $3" << std::endl;
+		}
+	}
+};
+
+class ShiftRight
+	: public Operator
+{
+public:
+
+	ShiftRight(StatementPtr _left, StatementPtr _right)
+	: Operator(_left, _right)
+	{}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+
+		left->translate(dst, scope, scope_bindings);
+		dst << "<<";
+		right->translate(dst, scope, scope_bindings);
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+
+		int x = 8;
+
+		right->compile(dst, program_data, bindings);
+
+		while (program_data.used_registers[x] == 1) { x++; }
+
+		if (x <= 25){
+			program_data.used_registers[x] = 1;
+
+			dst << "move	$" << x << ", $2" << std::endl;
+
+			left->compile(dst, program_data, bindings);
+			dst << "sll	$2, $" << x << std::endl;
+
+			program_data.used_registers[x] = 0;
+		}
+		else {
+			program_data.stack_size += 4;
+			int current_stack = program_data.stack_size;
+			dst << "addu	$sp, $sp, -4" << std::endl;
+			dst << "sw	$2, 8($sp)" << std::endl;
+			left->compile(dst, program_data, bindings);
+			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
+			dst << "addu	$sp, $sp, 4" << std::endl;
+			program_data.stack_size -= 4;
+			dst << "sll	$2, $2, $3" << std::endl;
+		}
+	}
 };
 
 class Increment
@@ -304,7 +395,7 @@ class Increment
 {
 public:
 	StatementPtr left;
-	
+
 	Increment(StatementPtr _left)
 	: left(_left)
 	{}
@@ -321,7 +412,7 @@ public:
 		dst << "addiu $2, 1";
 		GetStore(dst, program_data, bindings, id);
 	}
-	
+
 };
 
 class Decrement
@@ -329,7 +420,7 @@ class Decrement
 {
 public:
 	StatementPtr left;
-	
+
 	Decrement(StatementPtr _left)
 	: left(_left)
 	{}
@@ -346,16 +437,16 @@ public:
 		dst << "addiu $2, 1";
 		GetStore(dst, program_data, bindings, id);
 	}
-	
+
 };
 
 class Parentheses
 	: public Statement
 {
 public:
-	
+
 	StatementPtr expr;
-		
+
 	Parentheses(StatementPtr _expr)
 	: expr(_expr)
 	{}
@@ -371,8 +462,8 @@ public:
 	{
 		expr->compile(dst, program_data, bindings);
 	}
-	
-	
+
+
 };
 
 

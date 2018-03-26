@@ -27,7 +27,10 @@ lw	$fp,16($sp)
 addiu	$sp,$sp,20
 j $31
 nop
+b else_if_end_3
 if_end_2:
+nop
+else_if_end_3:
 li	$2, 1
 move	$fp,$sp
 lw	$31,12($sp)

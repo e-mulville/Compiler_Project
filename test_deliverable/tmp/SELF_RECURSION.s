@@ -66,9 +66,10 @@ lw	$fp,20($sp)
 addiu	$sp,$sp,24
 j $31
 nop
-beq	$0, $0, else_end_1
+beq	$0, $0, else_end_2
 nop
 if_end_0:
+nop
 li	$2, 0
 move	$fp,$sp
 lw	$31,16($sp)
@@ -76,7 +77,8 @@ lw	$fp,20($sp)
 addiu	$sp,$sp,24
 j $31
 nop
-else_end_1:
+else_end_2:
+else_if_end_1:
 move	$2, $0
 move	$fp,$sp
 lw	$31,16($sp)

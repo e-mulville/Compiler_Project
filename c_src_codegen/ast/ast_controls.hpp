@@ -5,27 +5,28 @@
 #include <iostream>
 
 extern int name_counter;
+extern std::string else_if_name;
 
 class Control
 	: public Statement
 {
 protected:
 
-	
+
 public:
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{}
-	
-	
-	
+
+
+
 
 	/*std::string getId() const override{
 		return left->getId();
 	}
 
 	double getValue() const override
-    	{ 
+    	{
 		return right->getValue();
 	}*/
 };
@@ -36,10 +37,12 @@ class If
 public:
 	StatementPtr condition;
 	StatementPtr body;
+	StatementPtr else_if;
 
-	If(StatementPtr _condition, StatementPtr _body) :
+	If(StatementPtr _condition, StatementPtr _body, StatementPtr _else_if) :
 	condition(_condition)
-	, body(_body) {}
+	, body(_body)
+	, else_if(_else_if) {}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
@@ -56,10 +59,15 @@ public:
 	{
 		condition->compile(dst, program_data, bindings);
 		std::string if_label = makeName("if_end");
+
 		program_data.scope++;
 		dst << "beq	$2, $0, " << if_label << std::endl;
 		dst << "nop" << std::endl;
+
 		body->compile(dst, program_data, bindings);
+
+		else_if_name = makeName("else_if_end");
+		dst << "b " << else_if_name << std::endl;
 		dst << if_label << ":" << std::endl;
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			if ((bindings[x].context == program_data.context) && (bindings[x].var_scope == program_data.scope)){
@@ -67,8 +75,11 @@ public:
 			}
 		}
 		program_data.scope--;
+		else_if->compile(dst, program_data, bindings);
+		dst << else_if_name << ":" << std::endl;
+
 	}
-	
+
 };
 
 class IfElse
@@ -77,11 +88,13 @@ class IfElse
 public:
 	StatementPtr if_condition;
 	StatementPtr if_body;
+	StatementPtr else_if;
 	StatementPtr else_body;
 
-	IfElse(StatementPtr _if_condition, StatementPtr _if_body, StatementPtr _else_body) :
+	IfElse(StatementPtr _if_condition, StatementPtr _if_body, StatementPtr _else_if, StatementPtr _else_body) :
 	if_condition(_if_condition)
-	, if_body(_if_body)	
+	, if_body(_if_body)
+	, else_if(_else_if)
 	, else_body(_else_body) {}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
@@ -99,7 +112,7 @@ public:
 		for(int x = 0; x < scope; x++){
 			dst << "    ";
 		}
-		dst << "else:" << std::endl;		
+		dst << "else:" << std::endl;
 		scope++;
 		for(int x = 0; x < scope; x++){
 			dst << "    ";
@@ -113,6 +126,7 @@ public:
 	{
 		if_condition->compile(dst, program_data, bindings);
 		std::string if_label = makeName("if_end");
+		else_if_name = makeName("else_if_end");
 		std::string else_label = makeName("else_end");
 		program_data.scope++;
 		dst << "beq	$2, $0, " << if_label << std::endl;
@@ -121,9 +135,10 @@ public:
 		dst << "beq	$0, $0, " << else_label << std::endl;
 		dst << "nop" << std::endl;
 		dst << if_label << ":" << std::endl;
-		
+		else_if->compile(dst, program_data, bindings);
 		else_body->compile(dst, program_data, bindings);
 		dst << else_label << ":" << std::endl;
+		dst << else_if_name << ":"<< std::endl;
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			if ((bindings[x].context == program_data.context) && (bindings[x].var_scope == program_data.scope)){
 				bindings.erase(bindings.begin()+x);
@@ -131,7 +146,53 @@ public:
 		}
 		program_data.scope--;
 	}
-	
+
+};
+
+class ElseIf
+	: public Control
+{
+public:
+	StatementPtr condition;
+	StatementPtr body;
+
+	ElseIf(StatementPtr _condition, StatementPtr _body) :
+	condition(_condition)
+	, body(_body) {}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << "else if(";
+		condition->translate(dst, scope, scope_bindings);
+		dst << "):" << std::endl;
+		scope++;
+		body->translate(dst, scope, scope_bindings);
+		dst << "pass" << std::endl;
+		scope--;
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		condition->compile(dst, program_data, bindings);
+		std::string if_label = makeName("if_end");
+		program_data.scope++;
+		dst << "beq	$2, $0, " << if_label << std::endl;
+		dst << "nop" << std::endl;
+
+		std::string temp_else_if_name = else_if_name; //saving else if name incase an else if inside body
+		body->compile(dst, program_data, bindings);
+		else_if_name = temp_else_if_name;
+
+		dst << "b " << else_if_name << std::endl;
+		dst << if_label << ":" << std::endl;
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			if ((bindings[x].context == program_data.context) && (bindings[x].var_scope == program_data.scope)){
+				bindings.erase(bindings.begin()+x);
+			}
+		}
+		program_data.scope--;
+	}
+
 };
 
 class While
@@ -149,7 +210,7 @@ public:
 	{
 		dst << "while (";
 		condition->translate(dst, scope, scope_bindings);
-		dst << "):" << std::endl;	
+		dst << "):" << std::endl;
 		scope++;
 		for(int x = 0; x < scope; x++){
 			dst << "    ";
@@ -164,7 +225,7 @@ public:
 		condition->compile(dst, program_data, bindings);
 		std::string start_label = makeName("while_start");
 		std::string end_label = makeName("while_end");
-		
+
 
 		dst << start_label << ":" << std::endl;
 		condition->compile(dst, program_data, bindings);
@@ -203,13 +264,13 @@ public:
 	{
 		condition->compile(dst, program_data, bindings);
 		std::string start_label = makeName("do_start");
-		
+
 
 		dst << start_label << ":" << std::endl;
 		program_data.scope++;
 		body->compile(dst, program_data, bindings);
 		condition->compile(dst, program_data, bindings);
-		dst << "bne	$0, $1, " << start_label << std::endl; 
+		dst << "bne	$0, $1, " << start_label << std::endl;
 		dst << "nop" << std::endl;
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			if ((bindings[x].context == program_data.context) && (bindings[x].var_scope == program_data.scope)){
@@ -243,7 +304,7 @@ public:
 		condition->compile(dst, program_data, bindings);
 		std::string start_label = makeName("for_start");
 		std::string end_label = makeName("for_end");
-		
+
 
 		dst << start_label << ":" << std::endl;
 		condition->compile(dst, program_data, bindings);
@@ -260,11 +321,11 @@ public:
 			}
 		}
 		program_data.scope--;
-		
+
 	}
 
-	
-	
+
+
 };
 
 

@@ -26,6 +26,11 @@ int line;
 "*="		{ return T_MULTASSIGN; }
 "/="		{ return T_DIVASSIGN; }
 "%="		{ return T_MODASSIGN; }
+"&="    { return T_ANDASSIGN; }
+"|="    { return T_ORASSIGN; }
+"^="    { return T_XORASSIGN; }
+"<<="   { return T_SLLASSIGN; }
+">>="   { return T_SRLASSIGN; }
 "<"		{ return T_LESS; }
 "<="		{ return T_EQLT; }
 ">"		{ return T_GREATER; }
@@ -36,6 +41,8 @@ int line;
 "&"		{ return T_BITAND; }
 "|"		{ return T_BITOR; }
 "^"		{ return T_BITXOR; }
+"<<"  { return T_SLL; }
+">>"  { return T_SRL; }
 
 [+]		{ return T_ADD; }
 [-]		{ return T_SUB; }
@@ -51,7 +58,7 @@ int line;
 [,]		{ return T_COMMA; }
 
 
-
+"else if" { return T_ELSEIF; }
 if		{ return T_IF; }
 else		{ return T_ELSE; }
 while		{ return T_WHILE; }
