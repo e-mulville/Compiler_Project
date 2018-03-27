@@ -21,13 +21,13 @@ protected:
 	, assigned(_assigned)
 	{}
 public:
-	
+
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
 		scope_bindings.insert( std::make_pair( getId(), scope ) );
         	identifier->translate(dst, scope, scope_bindings);
 		if (assigned == 0){
-			dst << "=0" << std::endl;	
+			dst << "=0" << std::endl;
 		}
 	}
 
@@ -53,7 +53,7 @@ public:
 	StatementPtr arg_list;
 	StatementPtr statement_list;
 	int num;
-	
+
 	FuncDeclaration(StatementPtr _var_dec, StatementPtr _arg_list, StatementPtr _statement_list)
 	: var_dec(_var_dec)
 	, arg_list(_arg_list)
@@ -93,12 +93,12 @@ public:
 		dst << "sw	$fp," << stack_move-4 << "($sp)" << std::endl;
 		dst << "sw	$31," << stack_move-8 << "($sp)" << std::endl;
 		dst << "move	$fp,$sp" << std::endl;
-	
+
 		program_data.stack_counter = stack_move; //so i can put above the stack
 		arg_list->compile(dst, program_data, bindings); //will do save the first 4 arg in the space above the stack allocated.
-		program_data.stack_counter = 8; //so i can allocate in the stack 
+		program_data.stack_counter = 8; //so i can allocate in the stack
 		//moving number to pass through the declarations and use in bindings - use meta_data?
-		statement_list->compile(dst, program_data, bindings); 
+		statement_list->compile(dst, program_data, bindings);
 
 		dst << "move	$2, $0" << std::endl; //default return 0
 		dst << "move	$fp,$sp" << std::endl;
@@ -108,10 +108,10 @@ public:
 		dst << "j	$31" << std::endl;
 		dst << "nop" << std::endl;
 		program_data.context = "global";
-		
+
 		for (int x = 4; x < 8; x++){
-			program_data.used_registers[x] = 0; //cleaning up for argument passing 
-		}		
+			program_data.used_registers[x] = 0; //cleaning up for argument passing
+		}
 	}
 };
 
@@ -120,7 +120,7 @@ class IntDeclaration
 	: public Declaration
 {
 public:
-	
+
 	IntDeclaration(StatementPtr _identifier, bool _assigned)
 	: Declaration("int", _identifier, _assigned) {var_number++;}
 
@@ -152,7 +152,7 @@ public:
 				dst << "	.type	" << data.Id << ", @object" << std::endl;
 				dst << "	.size	" << data.Id << ", 4" << std::endl;
 				dst << data.Id << ":" << std::endl;
-				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare		
+				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare
 			}
 
 			data.context = program_data.context;
@@ -176,7 +176,7 @@ class CharDeclaration
 	: public Declaration
 {
 public:
-	
+
 	CharDeclaration(StatementPtr _identifier, bool _assigned)
 	: Declaration("char", _identifier, _assigned) {var_number++;}
 
@@ -208,7 +208,7 @@ public:
 				dst << "	.type	" << data.Id << ", @object" << std::endl;
 				dst << "	.size	" << data.Id << ", 1" << std::endl;
 				dst << data.Id << ":" << std::endl;
-				dst << "	.byte	"; //neeeeed value maybe what if not assiged just declare		
+				dst << "	.byte	"; //neeeeed value maybe what if not assiged just declare
 			}
 
 			data.context = program_data.context;
@@ -230,7 +230,7 @@ class ShortDeclaration
 	: public Declaration
 {
 public:
-	
+
 	ShortDeclaration(StatementPtr _identifier, bool _assigned)
 	: Declaration("short", _identifier, _assigned) {var_number++;}
 
@@ -262,7 +262,7 @@ public:
 				dst << "	.type	" << data.Id << ", @object" << std::endl;
 				dst << "	.size	" << data.Id << ", 2" << std::endl;
 				dst << data.Id << ":" << std::endl;
-				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare		
+				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare
 			}
 
 			data.context = program_data.context;
@@ -284,7 +284,7 @@ class ArrayDeclaration
 	: public Declaration
 {
 public:
-	
+
 	ArrayDeclaration(std::string _type, StatementPtr _identifier, bool _assigned)
 	: Declaration(_type, _identifier, _assigned) {var_number += _identifier->getValue();}
 
@@ -333,7 +333,7 @@ class VoidDeclaration
 	: public Declaration
 {
 public:
-	
+
 	VoidDeclaration(StatementPtr _identifier, bool _assigned)
 	: Declaration("", _identifier, _assigned) {}
 

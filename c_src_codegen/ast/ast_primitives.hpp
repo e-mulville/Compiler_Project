@@ -13,12 +13,12 @@ private:
 public:
 	Variable(const std::string &_id, bool _store)
 		: id(_id)
-		, store(_store) 
+		, store(_store)
 	{}
 
 	std::string getId() const override
 	{ return id; }
-	
+
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
@@ -49,10 +49,19 @@ public:
 						return;
 					}
 				}
-				
+				if (bindings[x].type == "short"){
+					if (store == 1){
+						dst << "sh	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						dst << "lh	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
+						return;
+					}
+				}
 			}
 			else if ((bindings[x].Id == id) && (bindings[x].context == "global")){
-				if(bindings[x].type == "int"){				
+				if(bindings[x].type == "int"){
 					if (store == 1){
 						dst << "lui	$3,%hi(" << id << ")" << std::endl;
 						dst << "addiu	$3,$3,%lo(" << id << ")" << std::endl;
@@ -65,7 +74,7 @@ public:
 						return;
 					}
 				}
-				if(bindings[x].type == "char"){				
+				if(bindings[x].type == "char"){
 					if (store == 1){
 						dst << "lui	$3,%hi(" << id << ")" << std::endl;
 						dst << "addiu	$3,$3,%lo(" << id << ")" << std::endl;
@@ -77,7 +86,94 @@ public:
 						dst << "lb	$2,%lo(" << id << ")($2)" << std::endl;
 						return;
 					}
-				} 
+				}
+				if(bindings[x].type == "short"){
+					if (store == 1){
+						dst << "lui	$3,%hi(" << id << ")" << std::endl;
+						dst << "addiu	$3,$3,%lo(" << id << ")" << std::endl;
+						dst << "sh	$2,  0($3)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						dst << "lui	$2,%hi(" << id << ")" << std::endl;
+						dst << "lh	$2,%lo(" << id << ")($2)" << std::endl;
+						return;
+					}
+				}
+			}
+		}
+		dst << "cant find variable id:" << id << " context: " << program_data.context << " scope: " << program_data.scope << std::endl;
+	}
+};
+
+class Pointer
+	: public Statement
+{
+private:
+	std::string id;
+	bool store;
+public:
+	Pointer(const std::string &_id, bool _store)
+		: id(_id)
+		, store(_store)
+	{}
+
+	std::string getId() const override
+	{
+	std::string temp = id;
+	temp.erase(0, 1);
+	return temp;
+	}
+
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst << getId();
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			if ((bindings[x].Id == getId()) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
+				if (bindings[x].type == "int"){
+					if (store == 1){
+						dst << "move	$3, $2" << std::endl;
+						GetLoad(dst, program_data, bindings, getId());
+						dst << "sw	$3, ($2)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						GetLoad(dst, program_data, bindings, getId());
+						dst << "lw	$2, ($2)" << std::endl;
+						return;
+					}
+				}
+				if (bindings[x].type == "char"){
+					if (store == 1){
+						dst << "move	$3, $2" << std::endl;
+						GetLoad(dst, program_data, bindings, getId());
+						dst << "sb	$3, ($2)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						GetLoad(dst, program_data, bindings, getId());
+						dst << "lb	$2, ($2)" << std::endl;
+						return;
+					}
+				}
+				if (bindings[x].type == "short"){
+					if (store == 1){
+						dst << "move	$3, $2" << std::endl;
+						GetLoad(dst, program_data, bindings, getId());
+						dst << "sh	$3, ($2)" << std::endl;
+						return;
+					}
+					else if(store == 0){
+						GetLoad(dst, program_data, bindings, getId());
+						dst << "lh	$2, ($2)" << std::endl;
+						return;
+					}
+				}
 			}
 		}
 		dst << "cant find variable id:" << id << " context: " << program_data.context << " scope: " << program_data.scope << std::endl;
@@ -95,7 +191,7 @@ public:
 	{}
 
 	double getValue() const override
-	{ 
+	{
 	char temp = value[1];
 	return temp; }
 
@@ -106,7 +202,47 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		dst<< "li	$2, " << value << std::endl;	
+
+		dst<< "li	$2, " << value << std::endl;
+	}
+};
+
+class Address
+	: public Statement
+{
+private:
+	std::string value;
+public:
+	Address(const std::string &_value)
+		: value(_value)
+	{}
+
+	std::string getId() const override
+	{
+	std::string id = value;
+	id.erase(0, 1);
+	return id;
+	}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
+		dst<<value;
+	}
+
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			if ((bindings[x].Id == getId()) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
+				dst << "move	$2, $fp" << std::endl;
+				dst << "addiu $2, $2, " << bindings[x].stack_address << std::endl;
+				return;
+			}
+			else if ((bindings[x].Id == getId()) && (bindings[x].context == "global")){
+				dst << "lui	$2,%hi(" << getId() << ")" << std::endl;
+				dst << "addiu	$2,$2,%lo(" << getId() << ")" << std::endl;
+				return;
+			}
+		}
 	}
 };
 
@@ -131,7 +267,7 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		dst<< "li	$2, " << value << std::endl;	
+		dst<< "li	$2, " << value << std::endl;
 	}
 };
 
@@ -141,7 +277,7 @@ class FunctionEvocation
 public:
 	StatementPtr identifier;
 	StatementPtr arg_list;
-		
+
 	FunctionEvocation(StatementPtr _identifier, StatementPtr _arg_list)
 	: identifier(_identifier)
 	, arg_list(_arg_list)
@@ -156,14 +292,14 @@ public:
 	}
 
 	virtual void compile (std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
-	{ 
+	{
 		meta_data saved_context = program_data;
 		std::string function_name = identifier->getId();
 		/*program_data.context = function_name;
 		program_data.scope = 0;
 		program_data.stack_counter = 0;
 		program_data.stack_size = 0;*/
-		
+
 		dst << "addiu	$sp,$sp,-76" << std::endl;
 		int y = 1;
 		for (int x = 8; x < 26; x++){
@@ -184,7 +320,7 @@ public:
 
 		program_data = saved_context;
 	}
-	
+
 };
 
 
@@ -199,12 +335,12 @@ public:
 	{}
 
 	std::string getId() const override
-	{ 
-		std::string temp = id; 
+	{
+		std::string temp = id;
 		temp.pop_back();
-		return temp; 
+		return temp;
 	}
-	
+
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
@@ -228,11 +364,11 @@ public:
 	Array(const std::string &_id, bool _store, double _position)
 	: id(_id)
 	, store(_store)
-	, position(_position)	
+	, position(_position)
 	{}
 
 	std::string getId() const override
-	{ 
+	{
 		return id;
 	}
 
@@ -240,7 +376,7 @@ public:
 	{
 		return position;
 	}
-	
+
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
 	{
@@ -261,7 +397,7 @@ public:
 					dst << "lw	$2, " << bindings[x].stack_address << "($fp)" << std::endl;
 					return;
 				}
-				
+
 			}
 			else if ((bindings[x].Id == id) && (bindings[x].context == "global")) {
 				dst << "la	$3," << id << std::endl;
@@ -275,7 +411,7 @@ public:
 					dst << "cant find variable id:" << tempId << " context: " << program_data.context << " scope: " << program_data.scope << std::endl;
 					return;
 				}
-				
+
 			}
 		}
 	}
@@ -293,7 +429,7 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		dst << "nop" << std::endl;	
+		dst << "nop" << std::endl;
 	}
 };
 

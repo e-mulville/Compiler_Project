@@ -73,14 +73,6 @@ public:
 	}
 	//! Evaluate the tree using the given mapping of variables to numbers
 
-	/*virtual std::string makeName(std::string name) const {
-		name += "_";
-		name += name_counter;
-		name_counter++;
-		return name;
-	} weird bug */
-
-
 
 	virtual std::string makeName(std::string name) const {
 		std::string temp = name;

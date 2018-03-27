@@ -113,7 +113,9 @@ extern int yydebug;
     T_NUMBER = 310,
     T_VARIABLE = 311,
     T_LABEL = 312,
-    T_CHAR_PRIMITIVE = 313
+    T_CHAR_PRIMITIVE = 313,
+    T_ADDRESS = 314,
+    T_POINTER = 315
   };
 #endif
 
@@ -128,7 +130,7 @@ union YYSTYPE
 	double number;
 	std::string *string;
 
-#line 132 "c_parser.tab.hpp" /* yacc.c:1909  */
+#line 134 "c_parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

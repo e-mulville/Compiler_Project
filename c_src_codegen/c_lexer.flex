@@ -19,6 +19,10 @@ int line;
 <SINGLE_COMMENT>"\n" { BEGIN(INITIAL); }
 <SINGLE_COMMENT>. { }
 
+[&][a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_ADDRESS; }
+[*][a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_POINTER; }
+['][0-9a-zA-Z]['] { yylval.string=new std::string(yytext); return T_CHAR_PRIMITIVE; }
+
 "=="		{ return T_EQUAL;}
 "!="		{ return T_NOTEQUAL; }
 "+="		{ return T_ADDASSIGN; }
@@ -74,6 +78,8 @@ return		{ return T_RETURN; }
 goto		{ return T_GOTO; }
 
 volatile	{;} //not used
+auto		{;}
+const   {;}
 
 [(]             { return T_LBRACKET; }
 [)]             { return T_RBRACKET; }
@@ -82,8 +88,6 @@ volatile	{;} //not used
 "["		{ return T_LSQR; }
 "]"		{ return T_RSQR; }
 
-
-['][a-zA-Z]['] { yylval.string=new std::string(yytext); return T_CHAR_PRIMITIVE; }
 [a-zA-Z_][0-9a-zA-Z]*[:]  { yylval.string=new std::string(yytext); return T_LABEL; }
 [0-9]+([.][0-9]*)? { yylval.number=strtod(yytext, 0); return T_NUMBER;  }
 [a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_VARIABLE; }
