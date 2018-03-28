@@ -1,3 +1,5 @@
+	.globl main
+	.text
 nop
 
 f:
