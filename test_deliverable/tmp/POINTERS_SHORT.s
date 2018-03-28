@@ -18,7 +18,7 @@ lw	$2, 12($fp)
 lb	$2, ($2)
 beq	$2, $8, not_start_0
 nop
-li $2, 1
+li	$2, 1
 beq	$0, $0, not_end_1
 nop
 not_start_0:
@@ -42,7 +42,7 @@ lw	$2, 12($fp)
 lb	$2, ($2)
 bne	$2, $8, not_start_4
 nop
-li $2, 1
+li	$2, 1
 beq	$0, $0, not_end_5
 nop
 not_start_4:

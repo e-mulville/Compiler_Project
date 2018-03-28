@@ -73,7 +73,7 @@ public:
 
 			dst << "bne	$2, $" << x << ", " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -94,7 +94,7 @@ public:
 
 			dst << "bne	$2, $3, " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -146,7 +146,7 @@ public:
 
 			dst << "beq	$2, $" << x << ", " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -167,7 +167,7 @@ public:
 
 			dst << "beq	$2, $3, " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -271,11 +271,11 @@ public:
 			dst << "slt	$2, $2, $" << x << std::endl;
 			dst << "bne	$2, $0, " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
-			dst << "move $2, $0" << std::endl;
+			dst << "move	$2, $0" << std::endl;
 			dst << end_label << ":" << std::endl;
 
 			program_data.used_registers[x] = 0;
@@ -293,7 +293,7 @@ public:
 			dst << "slt	$2, $2, $3" << std::endl;
 			dst << "bne	$2, $3, " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -396,7 +396,7 @@ public:
 			dst << "slt	$2, $" << x << ", $2" << std::endl;
 			dst << "bne	$2, $0, " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -418,7 +418,7 @@ public:
 			dst << "slt	$2, $3, $2" << std::endl;
 			dst << "bne	$2, $3, " << not_label << std::endl;;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -497,7 +497,7 @@ public:
 			dst << "slt	$2, $0, $3" << std::endl;
 			dst << "bne	$2, $0, " << not_label << std::endl;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -549,7 +549,7 @@ public:
 			dst << "or	$2, $2, $" << x << std::endl;
 			dst << "beq	$2, $0, " << not_label << std::endl;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;
@@ -573,7 +573,7 @@ public:
 			dst << "or	$2, $2, $3" << std::endl;
 			dst << "bne	$2, $0, " << not_label << std::endl;
 			dst << "nop" << std::endl;
-			dst << "li $2, 1" << std::endl;
+			dst << "li	$2, 1" << std::endl;
 			dst << "beq	$0, $0, " << end_label << std::endl;
 			dst << "nop" << std::endl;
 			dst << not_label << ":" << std::endl;

@@ -20,7 +20,6 @@ int line;
 <SINGLE_COMMENT>. { }
 
 [&][a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_ADDRESS; }
-[*][a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_POINTER; }
 ['][0-9a-zA-Z]['] { yylval.string=new std::string(yytext); return T_CHAR_PRIMITIVE; }
 
 "=="		{ return T_EQUAL;}

@@ -120,9 +120,7 @@ public:
 
 	std::string getId() const override
 	{
-	std::string temp = id;
-	temp.erase(0, 1);
-	return temp;
+	return id;
 	}
 
 

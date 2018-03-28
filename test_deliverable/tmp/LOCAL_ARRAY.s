@@ -14,7 +14,7 @@ move	$8, $2
 lw	$2, 28($fp)
 bne	$2, $8, not_start_0
 nop
-li $2, 1
+li	$2, 1
 beq	$0, $0, not_end_1
 nop
 not_start_0:

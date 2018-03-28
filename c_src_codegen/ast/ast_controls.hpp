@@ -51,6 +51,9 @@ public:
 		dst << "):" << std::endl;
 		scope++;
 		body->translate(dst, scope, scope_bindings);
+		for(int x = 0; x < scope; x++){
+			dst << "    ";
+		}
 		dst << "pass" << std::endl;
 		scope--;
 	}
@@ -321,11 +324,52 @@ public:
 			}
 		}
 		program_data.scope--;
+	}
+};
 
+class ForWithAssign
+	: public Control
+{
+public:
+	StatementPtr assign;
+	StatementPtr condition;
+	StatementPtr increment;
+	StatementPtr body;
+
+
+	ForWithAssign(StatementPtr _assign, StatementPtr _condition, StatementPtr _increment, StatementPtr _body) :
+	assign(_assign)
+	,condition(_condition)
+	,increment(_increment)
+	, body(_body) {}
+
+	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
+	{
 	}
 
+	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
+	{
+		std::string start_label = makeName("for_start");
+		std::string end_label = makeName("for_end");
 
-
+		assign->compile(dst, program_data, bindings);
+		dst << start_label << ":" << std::endl;
+		condition->compile(dst, program_data, bindings);
+		program_data.scope++;
+		dst << "beq	$2, $0, " << end_label << std::endl;
+		dst << "nop" << std::endl;
+		body->compile(dst, program_data, bindings);
+		increment->compile(dst, program_data, bindings);
+		dst << "beq	$0, $0, " << start_label << std::endl;
+		dst << "nop" << std::endl;
+		dst << end_label << ":" << std::endl;
+		for (int x = (bindings.size()-1); x >= 0; x--){
+			if ((bindings[x].context == program_data.context) && (bindings[x].var_scope == program_data.scope)){
+				bindings.erase(bindings.begin()+x);
+			}
+		}
+		program_data.scope--;
+	}
 };
 
 

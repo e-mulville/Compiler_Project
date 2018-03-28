@@ -35,7 +35,7 @@ lw	$2, 12($fp)
 lw	$2, ($2)
 bne	$2, $8, not_start_2
 nop
-li $2, 1
+li	$2, 1
 beq	$0, $0, not_end_3
 nop
 not_start_2:

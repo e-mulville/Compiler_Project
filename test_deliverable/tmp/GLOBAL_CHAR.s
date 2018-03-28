@@ -21,7 +21,7 @@ lui	$2,%hi(i)
 lb	$2,%lo(i)($2)
 bne	$2, $8, not_start_0
 nop
-li $2, 1
+li	$2, 1
 beq	$0, $0, not_end_1
 nop
 not_start_0:
