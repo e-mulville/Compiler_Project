@@ -409,7 +409,7 @@ public:
 	{
 		std::string id = left->getId();
 		GetLoad(dst, program_data, bindings, id);
-		dst << "addiu $2, 1";
+		dst << "addiu $2, 1" << std::endl;
 		GetStore(dst, program_data, bindings, id);
 	}
 
@@ -434,7 +434,7 @@ public:
 	{
 		std::string id = left->getId();
 		GetLoad(dst, program_data, bindings, id);
-		dst << "addiu $2, 1";
+		dst << "addiu $2, 1" << std::endl;
 		GetStore(dst, program_data, bindings, id);
 	}
 
