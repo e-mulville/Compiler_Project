@@ -301,7 +301,6 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		condition->compile(dst, program_data, bindings);
 		std::string start_label = makeName("for_start");
 		std::string end_label = makeName("for_end");
 
@@ -314,6 +313,7 @@ public:
 		body->compile(dst, program_data, bindings);
 		increment->compile(dst, program_data, bindings);
 		dst << "beq	$0, $0, " << start_label << std::endl;
+		dst << "nop" << std::endl;
 		dst << end_label << ":" << std::endl;
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			if ((bindings[x].context == program_data.context) && (bindings[x].var_scope == program_data.scope)){
