@@ -1,4 +1,4 @@
-int main(){  
+int f(){  
 	int x;
 	int y = 0;
 	for(x= 10; x > 0; x--){

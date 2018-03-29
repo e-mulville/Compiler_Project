@@ -1,68 +1,68 @@
-	.globl main
-	.text
 nop
+	.globl f
+	.text
 
-main:
-addiu	$sp,$sp,-24
-sw	$fp,20($sp)
-sw	$31,16($sp)
+f:
+addiu	$sp,$sp,-32
+sw	$fp,28($sp)
+sw	$31,24($sp)
 move	$fp,$sp
 nop
 nop
 li	$2, 10
-sw	$2, 8($fp)
-lw	$2, 8($fp)
+sw	$2, 16($fp)
+lw	$2, 16($fp)
 move	$8, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$9, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$10, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$11, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$12, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$13, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$14, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$15, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$16, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$17, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$18, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$19, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$20, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$21, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$22, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$23, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$24, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 move	$25, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 addu	$sp, $sp, -4
 sw	$2, 8($sp)
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 addu	$sp, $sp, -4
 sw	$2, 8($sp)
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 addu	$sp, $sp, -4
 sw	$2, 8($sp)
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 addu	$sp, $sp, -4
 sw	$2, 8($sp)
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 addu	$sp, $sp, -4
 sw	$2, 8($sp)
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 lw	$3,8($sp)
 addu	$sp, $sp, 4
 addu	$2, $2, $3
@@ -96,10 +96,10 @@ addu	$2, $2, $11
 addu	$2, $2, $10
 addu	$2, $2, $9
 addu	$2, $2, $8
-sw	$2, 8($fp)
+sw	$2, 16($fp)
 li	$2, 240
 move	$8, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 beq	$2, $8, not_start_0
 nop
 li	$2, 1
@@ -113,16 +113,16 @@ nop
 nop
 li	$2, 1
 move	$fp,$sp
-lw	$31,16($sp)
-lw	$fp,20($sp)
-addiu	$sp,$sp,24
+lw	$31,24($sp)
+lw	$fp,28($sp)
+addiu	$sp,$sp,32
 j $31
 nop
 b else_if_end_3
 if_end_2:
 li	$2, 240
 move	$8, $2
-lw	$2, 8($fp)
+lw	$2, 16($fp)
 bne	$2, $8, not_start_4
 nop
 li	$2, 1
@@ -136,9 +136,9 @@ nop
 nop
 li	$2, 0
 move	$fp,$sp
-lw	$31,16($sp)
-lw	$fp,20($sp)
-addiu	$sp,$sp,24
+lw	$31,24($sp)
+lw	$fp,28($sp)
+addiu	$sp,$sp,32
 j $31
 nop
 b else_if_end_3
@@ -146,8 +146,8 @@ if_end_6:
 else_if_end_3:
 move	$2, $0
 move	$fp,$sp
-lw	$31,16($sp)
-lw	$fp,20($sp)
-addiu	$sp,$sp,24
+lw	$31,24($sp)
+lw	$fp,28($sp)
+addiu	$sp,$sp,32
 j	$31
 nop

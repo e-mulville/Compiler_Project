@@ -6,6 +6,6 @@ int f(int i){
         return 0;
 }
 
-int main(){
+int g(){
     return f(5);
 }

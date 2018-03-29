@@ -19,7 +19,6 @@ int line;
 <SINGLE_COMMENT>"\n" { BEGIN(INITIAL); }
 <SINGLE_COMMENT>. { }
 
-[&][a-zA-Z_][0-9a-zA-Z]*  { yylval.string=new std::string(yytext); return T_ADDRESS; }
 ['][0-9a-zA-Z]['] { yylval.string=new std::string(yytext); return T_CHAR_PRIMITIVE; }
 
 "=="		{ return T_EQUAL;}

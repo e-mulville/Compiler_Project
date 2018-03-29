@@ -322,7 +322,7 @@ public:
 			dst << "move	$" << x << ", $2" << std::endl;
 
 			left->compile(dst, program_data, bindings);
-			dst << "sll	$2, $" << x << std::endl;
+			dst << "sllv	$2, $2, $" << x << std::endl;
 
 			program_data.used_registers[x] = 0;
 		}
@@ -335,7 +335,7 @@ public:
 			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
 			dst << "addu	$sp, $sp, 4" << std::endl;
 			program_data.stack_size -= 4;
-			dst << "sll	$2, $2, $3" << std::endl;
+			dst << "sllv	$2, $2, $3" << std::endl;
 		}
 	}
 };
@@ -372,7 +372,7 @@ public:
 			dst << "move	$" << x << ", $2" << std::endl;
 
 			left->compile(dst, program_data, bindings);
-			dst << "sll	$2, $" << x << std::endl;
+			dst << "srlv	$2, $2, $" << x << std::endl;
 
 			program_data.used_registers[x] = 0;
 		}
@@ -385,7 +385,7 @@ public:
 			dst << "lw	$3," << (program_data.stack_size-current_stack)+8 << "($sp)" << std::endl;
 			dst << "addu	$sp, $sp, 4" << std::endl;
 			program_data.stack_size -= 4;
-			dst << "sll	$2, $2, $3" << std::endl;
+			dst << "srlv	$2, $2, $3" << std::endl;
 		}
 	}
 };

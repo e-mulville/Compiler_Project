@@ -22,6 +22,11 @@ if [[ ${have_compiler} -eq 0 ]] ; then
     # Compile using our compiler
         base=$(echo $i | sed -E -e "s|${input}/([^.]+)[.]c|\1|g");
         $compiler -S $i -o tmp/$base.s
+ 
+    # Compile using our compiler
+	name=$(basename $i)
+        name1=$(echo $name | cut -f 1 -d '.')
+        mips-linux-gnu-gcc -c drivers/$name1'_driver.c' -o tmp/$name1'_driver'.o
     done
 
     cd tmp
@@ -34,7 +39,7 @@ if [[ ${have_compiler} -eq 0 ]] ; then
         if [[ -s $i ]] ; then
             # Link the generated assembly and the driver
             # object into a MIPS executable
-            mips-linux-gnu-gcc -static $base'.s' -o $base'.elf'
+	    mips-linux-gnu-gcc -static $base.s $base'_driver'.o -o $base'.elf'
 
             # Run the executable under QEMU
             qemu-mips $base'.elf'

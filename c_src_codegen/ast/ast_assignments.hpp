@@ -63,7 +63,13 @@ public:
 		}
 		else {
 			right->compile(dst, program_data, bindings);
-			left->compile(dst, program_data, bindings);
+			if (right->getValue() == 684908955){
+				std::string id = left->getId();
+				GetStore(dst, program_data, bindings, id);
+			}
+			else {
+				left->compile(dst, program_data, bindings);
+			}
 		}
 	}
 

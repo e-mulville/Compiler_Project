@@ -41,8 +41,6 @@ int main(int argc, char **argv)
 		outputFile << "    import sys" << std::endl << "    ret=main()" << std::endl << "    sys.exit(ret)" << std::endl;
 	}
 	if (std::string(argv[1]) == "-S"){
-		outputFile << "	.globl main" << std::endl;
-		outputFile << "	.text" << std::endl;
 		ast->compile(outputFile, program_data, bindings);
 	}
 

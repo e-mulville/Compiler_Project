@@ -1,7 +1,7 @@
 short i = 1;
 
-int main(){
-	if (i != 0){
+int f(){
+	if (i == 1){
 		return 0;
 	}
 	else {

@@ -87,7 +87,7 @@ ARGUMENT_DEC : VAR_DECLARATION {$$ = $1;} //
 
 ARGUMENT_CALL : VALUE { $$ = $1; } ////////////////////////////
 
-ASSIGNMENT : ASSIGN T_SEMICOLON {$$ = $1; }
+ASSIGNMENT : ASSIGN T_SEMICOLON { $$ = $1; }
 
 ASSIGN : CONTAINER T_ASSIGN LOGIC { $$ = new Assign($1, $3); }
 	| CONTAINER T_ADDASSIGN LOGIC { $$ = new AddAssign($1, $3); }
@@ -139,9 +139,10 @@ ELSE_IF_LIST : %empty { $$ = new empty();}
 	| ELSE_IF_LIST ELSE_IF { $$ = new ElseIfPair($1, $2); }
 
 ELSE_IF : T_ELSEIF T_LBRACKET LOGIC T_RBRACKET T_LCURLBRACKET STATEMENT_LIST T_RCURLBRACKET { $$ = new ElseIf($3, $6); }
+	| T_ELSEIF T_LBRACKET LOGIC T_RBRACKET STATEMENT { $$ = new ElseIf($3, $5); }
 
 LOGIC: LOGIC2 { $$ = $1; }
-	| T_LBRACKET LOGIC T_RBRACKET {$$ = new Parentheses($2); }
+
 
 LOGIC2 : LOGIC3 { $$ = $1; }
 	| LOGIC T_OR LOGIC3 { $$ = new Or($1, $3); }
@@ -187,10 +188,12 @@ VALUE_WITH_FUNC : FUNC_EVOKE { $$ = $1; }
 VALUE : ARRAY { $$ = $1; }
 	| T_NUMBER {$$ = new Number ($1); }
 	| T_SUB T_NUMBER {$$ = new Number ($2 * -1); }
+	| T_BITAND T_VARIABLE { $$ = new Address(*$2); }
 	| T_VARIABLE {$$ = new Variable (*$1, 0); }
 	| T_MULT T_VARIABLE { $$ = new Pointer(*$2, 0); }
 	| T_CHAR_PRIMITIVE {$$ = new Char (*$1); }
-	| T_ADDRESS { $$ = new Address(*$1); }
+	| T_LBRACKET LOGIC T_RBRACKET {$$ = new Parentheses($2); }
+
 
 
 ARRAY : T_VARIABLE T_LSQR T_NUMBER T_RSQR { $$ = new Array(*$1, 0, $3); }

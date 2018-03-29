@@ -1,4 +1,4 @@
-int main(){
+int f(){
 	int x = 10;
 	x = x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x + x;
 	if (x != 240){

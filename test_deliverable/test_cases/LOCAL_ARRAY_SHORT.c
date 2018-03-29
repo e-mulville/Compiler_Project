@@ -1,4 +1,4 @@
-int main(){
+int f(){
     	short a[5];
 	a[0] = 1;
 	if (a[0] == 1){

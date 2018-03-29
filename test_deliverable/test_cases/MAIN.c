@@ -1,1 +1,4 @@
-int main(){ return 0; }
+int function(){
+    int x=0;
+    return x;
+}

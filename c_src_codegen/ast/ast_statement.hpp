@@ -164,11 +164,14 @@ public:
 				program_data.used_registers[x] = 1;
 
 				if (x < 8){
-
 					dst << "move	$2, $" << x << std::endl;
+					this_statement->compile(dst, program_data, bindings);
 				}
-
-				this_statement->compile(dst, program_data, bindings);
+				else {
+					dst << "lw	$2, " << program_data.stack_counter + 16 << "($fp)" << std::endl;
+					program_data.stack_counter = 16;
+					this_statement->compile(dst, program_data, bindings);
+				}
 		}
 		if (type == "call") {
 				this_statement->compile(dst, program_data, bindings);
@@ -180,6 +183,11 @@ public:
 				if (x < 8){
 					dst << "move	$2, $" << x << std::endl;
 				}
+				else {
+					dst << "addiu $sp, $sp, -4" << std::endl;
+					GetLoad(dst, program_data, bindings, this_statement->getId());
+					dst << "sw	$2, 16($fp)" << std::endl;
+			}
 		}
 	}
 };

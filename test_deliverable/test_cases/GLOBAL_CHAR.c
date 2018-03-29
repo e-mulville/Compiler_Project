@@ -1,6 +1,6 @@
 char i = '0';
 
-int main(){
+int f(){
 	if (i == '0'){
 		return 0;
 	}

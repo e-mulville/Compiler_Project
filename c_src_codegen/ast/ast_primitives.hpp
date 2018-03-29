@@ -137,12 +137,12 @@ public:
 					if (store == 1){
 						dst << "move	$3, $2" << std::endl;
 						GetLoad(dst, program_data, bindings, getId());
-						dst << "sw	$3, ($2)" << std::endl;
+						dst << "sw	$3, 0($2)" << std::endl;
 						return;
 					}
 					else if(store == 0){
 						GetLoad(dst, program_data, bindings, getId());
-						dst << "lw	$2, ($2)" << std::endl;
+						dst << "lw	$2, 0($2)" << std::endl;
 						return;
 					}
 				}
@@ -150,12 +150,12 @@ public:
 					if (store == 1){
 						dst << "move	$3, $2" << std::endl;
 						GetLoad(dst, program_data, bindings, getId());
-						dst << "sb	$3, ($2)" << std::endl;
+						dst << "sb	$3, 0($2)" << std::endl;
 						return;
 					}
 					else if(store == 0){
 						GetLoad(dst, program_data, bindings, getId());
-						dst << "lb	$2, ($2)" << std::endl;
+						dst << "lb	$2, 0($2)" << std::endl;
 						return;
 					}
 				}
@@ -163,12 +163,12 @@ public:
 					if (store == 1){
 						dst << "move	$3, $2" << std::endl;
 						GetLoad(dst, program_data, bindings, getId());
-						dst << "sh	$3, ($2)" << std::endl;
+						dst << "sh	$3, 0($2)" << std::endl;
 						return;
 					}
 					else if(store == 0){
 						GetLoad(dst, program_data, bindings, getId());
-						dst << "lh	$2, ($2)" << std::endl;
+						dst << "lh	$2, 0($2)" << std::endl;
 						return;
 					}
 				}
@@ -217,9 +217,7 @@ public:
 
 	std::string getId() const override
 	{
-	std::string id = value;
-	id.erase(0, 1);
-	return id;
+		return value;
 	}
 
 	virtual void translate(std::ostream &dst, int &scope, std::map<std::string,double> &scope_bindings) const override
@@ -227,12 +225,17 @@ public:
 		dst<<value;
 	}
 
+	double getValue() const override
+	{
+		return 684908955;
+	}
+
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
 		for (int x = (bindings.size()-1); x >= 0; x--){
 			if ((bindings[x].Id == getId()) && (bindings[x].context == program_data.context) && (bindings[x].var_scope <= program_data.scope)){
 				dst << "move	$2, $fp" << std::endl;
-				dst << "addiu $2, $2, " << bindings[x].stack_address << std::endl;
+				dst << "addiu	$2, $2, " << bindings[x].stack_address << std::endl;
 				return;
 			}
 			else if ((bindings[x].Id == getId()) && (bindings[x].context == "global")){

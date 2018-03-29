@@ -1,5 +1,3 @@
-	.globl main
-	.text
 nop
 	.abicalls
 	.data
@@ -9,11 +7,13 @@ nop
 i:
 	.word	0
 	.text
+	.globl f
+	.text
 
-main:
-addiu	$sp,$sp,-24
-sw	$fp,20($sp)
-sw	$31,16($sp)
+f:
+addiu	$sp,$sp,-32
+sw	$fp,28($sp)
+sw	$31,24($sp)
 move	$fp,$sp
 nop
 nop
@@ -34,9 +34,9 @@ nop
 nop
 li	$2, 0
 move	$fp,$sp
-lw	$31,16($sp)
-lw	$fp,20($sp)
-addiu	$sp,$sp,24
+lw	$31,24($sp)
+lw	$fp,28($sp)
+addiu	$sp,$sp,32
 j $31
 nop
 beq	$0, $0, else_end_4
@@ -46,17 +46,17 @@ nop
 nop
 li	$2, 1
 move	$fp,$sp
-lw	$31,16($sp)
-lw	$fp,20($sp)
-addiu	$sp,$sp,24
+lw	$31,24($sp)
+lw	$fp,28($sp)
+addiu	$sp,$sp,32
 j $31
 nop
 else_end_4:
 else_if_end_3:
 move	$2, $0
 move	$fp,$sp
-lw	$31,16($sp)
-lw	$fp,20($sp)
-addiu	$sp,$sp,24
+lw	$31,24($sp)
+lw	$fp,28($sp)
+addiu	$sp,$sp,32
 j	$31
 nop

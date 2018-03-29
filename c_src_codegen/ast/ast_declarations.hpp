@@ -83,11 +83,12 @@ public:
 
 	virtual void compile(std::ostream &dst, meta_data &program_data, std::vector<var_data> &bindings) const override
 	{
-		int stack_move = (num+4)*4;
+		int stack_move = (num+6)*4;
 		program_data.context = var_dec->getId();
 		program_data.stack_counter = 0;
 		program_data.stack_size = stack_move;
-
+		dst << "	.globl " << program_data.context << std::endl;
+		dst << "	.text" << std::endl;
 		dst << std::endl << program_data.context << ":" << std::endl;
 		dst << "addiu	$sp,$sp,-" << stack_move << std::endl;
 		dst << "sw	$fp," << stack_move-4 << "($sp)" << std::endl;
@@ -96,7 +97,11 @@ public:
 
 		program_data.stack_counter = stack_move; //so i can put above the stack
 		arg_list->compile(dst, program_data, bindings); //will do save the first 4 arg in the space above the stack allocated.
-		program_data.stack_counter = 8; //so i can allocate in the stack
+
+		for ( int x = 4; x < 8; x++){
+			program_data.used_registers[x] = 0;
+		}
+		program_data.stack_counter = 16; //so i can allocate in the stack
 		//moving number to pass through the declarations and use in bindings - use meta_data?
 		statement_list->compile(dst, program_data, bindings);
 
@@ -262,7 +267,7 @@ public:
 				dst << "	.type	" << data.Id << ", @object" << std::endl;
 				dst << "	.size	" << data.Id << ", 2" << std::endl;
 				dst << data.Id << ":" << std::endl;
-				dst << "	.word	"; //neeeeed value maybe what if not assiged just declare
+				dst << "	.half	"; //neeeeed value maybe what if not assiged just declare
 			}
 
 			data.context = program_data.context;
