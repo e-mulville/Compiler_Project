@@ -9,5 +9,6 @@ DecideASTstyle,,2,EM,,Decide on our AST style to guide our efforts
 WriteSimpleProgram,Decided AST style,8,EM,e33b2c16e16c9580ed84a4545329557fd1bc3fff,Write a simple program that works
 AddSupportForMoreFeatures,WriteSimpleProgram,8,EM,7787f9991c91d11cb46e9559397c734428b522da,Add further tokens and cases
 FinishTranslator,AddSuportForMoreFeatures,12,EM,1221a95f43099c98dde29ebcbde7f22f07c32cf1,Completed Translator
-CodeGenSimple,,10,EM,,Code gen a simple main
-AddMoreThings,CodeGenSimple,,,,
+CodeGenSimple,,10,EM,ceb914b9e3af21b5202d0bd8c5cc0f67f52a8d50,Code gen a simple main
+AddMoreThings,CodeGenSimple,40,EM,this,Add further tokens and cases for code gen
+TestBench,CodeGenSimple,5,IM,this,Testbench for code gen

@@ -5,3 +5,6 @@ Date,Effort,Developers,Milestones
 19/02/18,3,EM,Lay out milestones
 26/02/18,4,EM,"LookatParser, Docode-genlab, DecideASTstyle"
 05/02/18,16,EM,"WriteSimpleProgram, AddSupportForMoreFeatures , FinishTranslator"
+12/02/18,30,EM/IM,CodeGenSimple
+19/02/18,35,EM/IM,AddMoreThings
+26/02/18,35,EM,"AddMoreThings, TestBench"
